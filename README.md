@@ -2,7 +2,7 @@
 
 Installers for Deterministic Coder, a local-first AI coding IDE with a bounded, approval-gated agent. This repository only hosts release binaries; the source is not published here.
 
-Current version: **v0.0.1 (beta, unsigned)**. See the release notes for what works and what does not.
+Current version: **v0.0.2 (beta, unsigned)**. See the release notes for what works and what does not.
 
 ## Download
 
