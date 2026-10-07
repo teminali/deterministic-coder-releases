@@ -2,7 +2,7 @@
 
 Installers for Deterministic Coder, a local-first AI coding IDE with a bounded, approval-gated agent. This repository only hosts release binaries; the source is not published here.
 
-Current version: **v0.0.2 (beta, unsigned)**. See the release notes for what works and what does not.
+Current version: **v0.0.3 (beta, unsigned)**. v0.0.3 adds automatic updates (a version badge at the bottom right of the app); v0.0.2 and earlier cannot update themselves, so install v0.0.3 by hand once. See the release notes for what works and what does not.
 
 ## Download
 
@@ -30,6 +30,10 @@ Pattern: `https://github.com/teminali/deterministic-coder-releases/releases/late
 - macOS: right-click the app, choose Open. If it is reported as damaged: `xattr -dr com.apple.quarantine "/Applications/Deterministic Coder.app"`.
 - Windows: SmartScreen, More info, Run anyway.
 - Linux: `chmod +x` the AppImage, or `sudo dpkg -i` the deb.
+
+## Run a bigger model on your own Google Colab (experimental)
+
+[Open the notebook in Colab](https://colab.research.google.com/github/teminali/deterministic-coder-releases/blob/main/colab/deterministic_coder_server.ipynb). It serves a model on a Colab GPU you choose and joins your own Tailscale network, and Deterministic Coder connects to it from Settings. It has **not yet been verified on a live Colab runtime**. Details, limits and the terms note: [colab/README.md](colab/README.md).
 
 ## Verify
 
