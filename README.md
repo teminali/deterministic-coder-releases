@@ -2,7 +2,20 @@
 
 Installers for Deterministic Coder, a local-first AI coding IDE with a bounded, approval-gated agent. This repository only hosts release binaries; the source is not published here.
 
-Current version: **v0.0.4 (beta, unsigned)**. If you run v0.0.3, the update arrives through the version badge at the bottom right of the app (it downloads in the background and offers Restart to update); v0.0.2 and earlier cannot update themselves, so install v0.0.4 by hand once. See the release notes for what works and what does not.
+Current version: **v0.0.5 (beta, unsigned)**. If you run v0.0.4, the update arrives through the version badge at the bottom right of the app (it downloads in the background and offers Restart to update); v0.0.2 and earlier cannot update themselves, so install v0.0.5 by hand once. The [release notes](https://github.com/teminali/deterministic-coder-releases/releases/tag/v0.0.5) say what is covered by a live check and what is not.
+
+### One-line install
+
+```
+curl -fsSL https://raw.githubusercontent.com/teminali/deterministic-coder-releases/main/install.sh | sh        # macOS and Linux
+irm https://raw.githubusercontent.com/teminali/deterministic-coder-releases/main/install.ps1 | iex             # Windows PowerShell
+```
+
+The macOS and Linux script was run against the real v0.0.5 release (download, SHA-256 check, install). The Windows script has not been run yet.
+
+### What's new in v0.0.5
+
+Web app builder (`/build`), site cloner (`/clone`), code audit (`/audit`, `/clean`), symbol edits, agent skills and browser tools, a Colab GPU sign-in lane, first-run setup cards and a one-line installer. Full list, with what is not covered, in the [v0.0.5 release notes](https://github.com/teminali/deterministic-coder-releases/releases/tag/v0.0.5).
 
 ### What's new in v0.0.4
 
