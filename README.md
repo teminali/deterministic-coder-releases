@@ -1,32 +1,25 @@
 # Deterministic Coder releases
 
-Installers for Deterministic Coder, a local-first AI coding IDE with a bounded, approval-gated agent. This repository only hosts release binaries; the source is not published here.
+Installers for Deterministic Coder, a desktop app where you describe an app in plain words, Lens (the hosted engine) designs it, and the app writes the whole project into your folder. This repository only hosts release binaries; the source is not published here.
 
-Current version: **v0.0.5 (beta, unsigned)**. If you run v0.0.4, the update arrives through the version badge at the bottom right of the app (it downloads in the background and offers Restart to update); v0.0.2 and earlier cannot update themselves, so install v0.0.5 by hand once. The [release notes](https://github.com/teminali/deterministic-coder-releases/releases/tag/v0.0.5) say what is covered by a live check and what is not.
+Current version: **v0.0.6 (beta, unsigned)**. If you run v0.0.5, the update arrives through the version badge at the bottom right of the app (it downloads in the background and offers Restart to update); v0.0.2 and earlier cannot update themselves, so install by hand once. See the release notes for what works and what does not.
 
-### One-line install
+### What's new in v0.0.6
 
-```
-curl -fsSL https://raw.githubusercontent.com/teminali/deterministic-coder-releases/main/install.sh | sh        # macOS and Linux
-irm https://raw.githubusercontent.com/teminali/deterministic-coder-releases/main/install.ps1 | iex             # Windows PowerShell
-```
+- **Lens is the only engine.** The model picker and everything behind it from earlier versions is gone: local models, the Colab GPU option, your own server and your own provider key.
+- **Add your Lens key in the Account tab.** Create a key at https://rabbitai.web.app/ (sign in there) and paste it in the app. The app checks it with Lens and keeps it encrypted by your system; it is never shown again. Lens does not work until you add one.
+- **Run what Lens built.** For a Lens-built project the Run button starts the backend and the web app on this computer after an approval window; the App view shows the running app, the API view lists the backend's endpoints and sends requests, and Stop ends everything. It needs Python 3.9 or newer and Node.js with npm.
+- **Delete from the chat.** "delete old.js", "delete the backend folder", "delete *.md" or "delete all files" is done by the app itself. Broad deletes ask first, go to the recycle bin and Undo brings them back.
+- **Usage card.** The Account tab shows your plan, the builds you have left today and the chat messages you have left, read from Lens.
 
-The macOS and Linux script was run against the real v0.0.5 release (download, SHA-256 check, install). The Windows script has not been run yet.
+The builds are still unsigned, and macOS may ask for Keychain access once after an update. What is covered and what is not: the release notes at https://github.com/teminali/deterministic-coder-releases/releases/tag/v0.0.6
 
-### What's new in v0.0.5
+## Release status
 
-Web app builder (`/build`), site cloner (`/clone`), code audit (`/audit`, `/clean`), symbol edits, agent skills and browser tools, a Colab GPU sign-in lane, first-run setup cards and a one-line installer. Full list, with what is not covered, in the [v0.0.5 release notes](https://github.com/teminali/deterministic-coder-releases/releases/tag/v0.0.5).
-
-### What's new in v0.0.4
-
-- **Local models are checked and downloaded on first run.** Son (14B) and Grandson (7B) are not inside the installer. On first launch the app checks your computer (memory, free disk, graphics), recommends the 14B (or the 7B if the computer cannot run both) and downloads it through Ollama when you agree. If neither fits, the local models are marked unsupported and the app says why. Ollama itself is not installed for you: the app opens its download page.
-- **The model picker always lists every option** (Local, Colab GPU, Cloud). A model that is not installed or set up is marked "needs setup" and opens the right setup when clicked; groups can be collapsed. Local and Colab rows carry a "free" badge, Cloud rows a "pro" badge.
-- **Run a bigger model on your own Google Colab GPU (experimental).** A public notebook (see below) serves the model on a Colab GPU you choose and joins your own Tailscale network. It has **not yet been verified on a live Colab runtime**.
-- **Overall usage.** The Usage card adds up what you used across Local, Colab GPU, your own server, your own OpenRouter key and Cloud, with the model time spent. It is informational, counted on your computer only, never sent to the dashboard, and has a Reset button.
-- **Privacy fix.** With a custom server or Colab model selected, inline autocomplete used to send the text around your cursor to the hosted service for signed-in or keyed users. It now sends nothing in that case.
-- **Updates:** a release whose file does not match its published checksum is no longer re-downloaded on every check, and the downloaded installer is removed after it is installed.
-
-The memory and disk thresholds for 14B / 7B / unsupported are estimates, not yet measured on real devices of each kind. The builds are still unsigned, and macOS may ask for Keychain access once after an update. Full notes: https://github.com/teminali/deterministic-coder-releases/releases/tag/v0.0.4
+| Version | State | What was verified | What was not |
+| --- | --- | --- | --- |
+| v0.0.6 | Published, Latest | See the release notes: every claim is either covered by a unit test and a live run, or listed under Not covered. | The installers on Windows and Linux were launch-checked by CI only; first-run install time for Run app, the plan limits on the hosted service and a real Pro payment were not exercised. |
+| v0.0.5 | Superseded | First release with the release gate. | |
 
 ## Download
 
@@ -47,17 +40,21 @@ Pattern: `https://github.com/teminali/deterministic-coder-releases/releases/late
 ## Requirements
 
 - macOS 11 or later, Windows 10 or later, or a recent 64-bit Linux desktop (GTK 3).
-- For local models: [Ollama](https://ollama.com) installed and running. Hosted models need a sign-in and a plan.
+- A network connection and a Lens key (create one at https://rabbitai.web.app/).
+- To run a generated app with Run app: Python 3.9 or newer and Node.js with npm. Building and editing need neither.
 
 ## First launch (the builds are unsigned)
 
-- macOS: right-click the app, choose Open. If it is reported as damaged: `xattr -dr com.apple.quarantine "/Applications/Deterministic Coder.app"`.
+The builds are not signed with a paid Apple or Microsoft certificate yet, so a file downloaded in a browser gets a warning. A terminal command avoids it: it downloads the same file, checks it against `SHA256SUMS.txt` (and stops on a mismatch), and installs it.
+
+- macOS / Linux: `curl -fsSL https://raw.githubusercontent.com/teminali/deterministic-coder-releases/main/install.sh | sh`
+- Windows (PowerShell): `irm https://raw.githubusercontent.com/teminali/deterministic-coder-releases/main/install.ps1 | iex`
+
+If you download the file instead:
+
+- macOS: open System Settings > Privacy & Security and choose Open Anyway. If it is reported as damaged: `xattr -dr com.apple.quarantine "/Applications/Deterministic Coder.app"`.
 - Windows: SmartScreen, More info, Run anyway.
 - Linux: `chmod +x` the AppImage, or `sudo dpkg -i` the deb.
-
-## Run a bigger model on your own Google Colab (experimental)
-
-[Open the notebook in Colab](https://colab.research.google.com/github/teminali/deterministic-coder-releases/blob/main/colab/deterministic_coder_server.ipynb). It serves a model on a Colab GPU you choose and joins your own Tailscale network, and Deterministic Coder connects to it from Settings. It has **not yet been verified on a live Colab runtime**. Details, limits and the terms note: [colab/README.md](colab/README.md).
 
 ## Verify
 
