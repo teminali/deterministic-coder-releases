@@ -2,23 +2,23 @@
 
 Installers for Deterministic Coder, a desktop app where you describe an app in plain words, Lens (the hosted engine) designs it, and the app writes the whole project into your folder. This repository only hosts release binaries; the source is not published here.
 
-Current version: **v0.0.8 (beta, unsigned)**. If you run v0.0.7, the update arrives through the version badge at the bottom right of the app (it downloads in the background and offers Restart to update); v0.0.2 and earlier cannot update themselves, so install by hand once. See the release notes for what works and what does not.
+Current version: **v0.1.0 (beta, unsigned)**. If you run v0.0.8, the update arrives through the version badge at the bottom right of the app (it downloads in the background and offers Restart to update); v0.0.2 and earlier cannot update themselves, so install by hand once. See the release notes for what works and what does not.
 
-### What's new in v0.0.8
+### What's new in v0.1.0
 
-- **The apps Lens builds can say more.** Through the hosted Lens a generated app can have sign up, a forgot-password flow, roles with per-entity access (admin always exists; "only admins can see suppliers"), content pages (an About page, a landing page) and a menu with a link to every list, the signed-in email and Log out. Lens turns these on only when your words ask for them. They are already available to v0.0.7 users.
-- **Undo the last change.** Say "undo the last change" or type `/undo`: Lens asks first, then rewrites the files for the earlier version of the app; a file you edited yourself is left alone.
-- **Run the tests.** Say "run the tests" or type `/test`: after an approval window the app runs the generated backend's own tests on this computer and says what passed and what failed. Lens keeps the result, so you can ask why a test is failing.
-- **Lens sees more.** The map Lens reads carries the sign-up and reset switches, roles, pages, undoable changes and the last test result.
-- **Your own backend code.** A generated backend loads `backend/custom_routes.py` if you create it; regenerating never touches that file.
+- **Small games and tools.** Through the hosted Lens, "make a snake game", "tic-tac-toe for two players" or "a counter with a save button" adds one page of rules to the app: a board of coloured squares, keys, buttons, a timer, counters and text, and a score can be saved to a list of the app. "Make the snake faster" is a one-line change to the SPEC. It cannot draw pictures, play sound or talk to other sites.
+- **Publish.** Say "publish the app" or type `/publish`: after an approval window the app builds the web app and copies everything needed to run it into a `publish` folder of your project (the backend, the built web app, a compose file and the steps). The backend serves the web app from its own address, so it is one process or one container. Nothing is uploaded.
+- **The plan names every part.** The plan card of a new app also names a game, pages, roles and sign up, not only the data.
+- **Lens sees more.** The map Lens reads carries the page of rules of a game.
 
-The builds are still unsigned, and macOS may ask for Keychain access once after an update. What is covered and what is not: the release notes at https://github.com/teminali/deterministic-coder-releases/releases/tag/v0.0.8
+The builds are still unsigned, and macOS may ask for Keychain access once after an update. What is covered and what is not: the release notes at https://github.com/teminali/deterministic-coder-releases/releases/tag/v0.1.0
 
 ## Release status
 
 | Version | State | What was verified | What was not |
 | --- | --- | --- | --- |
-| v0.0.8 | Published, Latest | See the release notes: every claim is either covered by a unit test and a live run, or listed under Not covered. | The installers on Windows and Linux were launch-checked by CI only; first-run install time for Run app, running the tests on Windows and a real Pro payment were not exercised. |
+| v0.1.0 | Published, Latest | See the release notes: every claim is either covered by a unit test and a live run, or listed under Not covered. | The installers on Windows and Linux were launch-checked by CI only; first-run install time for Run app, running the tests and publishing on Windows, the Docker route of a published folder and a real Pro payment were not exercised. |
+| v0.0.8 | Superseded | See the release notes: every claim is either covered by a unit test and a live run, or listed under Not covered. | The installers on Windows and Linux were launch-checked by CI only; first-run install time for Run app, running the tests on Windows and a real Pro payment were not exercised. |
 | v0.0.7 | Superseded | See the release notes: every claim is either covered by a unit test and a live run, or listed under Not covered. | The installers on Windows and Linux were launch-checked by CI only; first-run install time for Run app and a real Pro payment were not exercised. |
 | v0.0.6 | Superseded | See the release notes: every claim is either covered by a unit test and a live run, or listed under Not covered. | The installers on Windows and Linux were launch-checked by CI only; first-run install time for Run app, the plan limits on the hosted service and a real Pro payment were not exercised. |
 | v0.0.5 | Superseded | First release with the release gate. | |
