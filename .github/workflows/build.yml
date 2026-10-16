@@ -1,0 +1,225 @@
+# Builds the unsigned beta installers for Deterministic Coder on GitHub's runners and keeps them as a DRAFT release of THIS
+# public repository. The source code lives in a separate PRIVATE repository (teminali/deterministic-coder); this workflow
+# reads it with a read-only deploy key (secret SOURCE_DEPLOY_KEY), builds the tag you name, and never publishes: the owner
+# publishes the draft by hand after the release gate has passed (docs/RELEASING.md in the source repository).
+#
+# Run it:  gh workflow run build.yml --repo teminali/deterministic-coder-releases -f tag=v0.1.1
+#
+# Safety: it only runs on workflow_dispatch by someone with write access to this repository (no pull_request or push
+# trigger, so a fork can never start it or reach the secret). Logs of a public repository are public: the build prints file
+# names and tool output, never the secret (GitHub masks it), and no source file is printed on purpose.
+name: build
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'The release tag in the source repository to build, for example v0.1.1'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: build-${{ inputs.tag }}
+  cancel-in-progress: false
+
+env:
+  TAG: ${{ inputs.tag }}
+  SOURCE_REPO: teminali/deterministic-coder
+  # Unsigned builds: never look for a signing identity.
+  CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+  # puppeteer is a dev-only dependency (not shipped); do not download its Chromium on CI.
+  PUPPETEER_SKIP_DOWNLOAD: 'true'
+
+jobs:
+  prepare:
+    name: draft release for the installers
+    runs-on: ubuntu-22.04
+    timeout-minutes: 10
+    steps:
+      - name: Check the tag name
+        run: |
+          case "$TAG" in v[0-9]*.[0-9]*.[0-9]*) ;; *) echo "tag must look like v1.2.3, got: $TAG"; exit 1;; esac
+
+      - name: Read the release notes and the version from the source repository
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ env.SOURCE_REPO }}
+          ref: ${{ inputs.tag }}
+          ssh-key: ${{ secrets.SOURCE_DEPLOY_KEY }}
+          persist-credentials: false
+          sparse-checkout: |
+            package.json
+            release-notes
+          path: src
+
+      - name: The tag must carry the same version as package.json
+        run: |
+          V="$(node -p "require('./src/package.json').version")"
+          test "v$V" = "$TAG" || { echo "package.json says $V but the tag is $TAG"; exit 1; }
+          test -f "src/release-notes/$TAG.md" || { echo "src/release-notes/$TAG.md is missing"; exit 1; }
+
+      - name: Create the draft release (or update its notes)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view "$TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            gh release edit "$TAG" --repo "$GITHUB_REPOSITORY" --notes-file "src/release-notes/$TAG.md"
+          else
+            gh release create "$TAG" --repo "$GITHUB_REPOSITORY" --draft --title "Deterministic Coder $TAG" --notes-file "src/release-notes/$TAG.md"
+          fi
+
+  build:
+    name: build (${{ matrix.name }})
+    needs: prepare
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 40
+    # The Intel mac job must never block the release; every other job must pass.
+    continue-on-error: ${{ matrix.optional }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: mac-arm64
+            runner: macos-14
+            optional: false
+            builder_args: '--mac dmg zip --arm64'
+          - name: mac-x64
+            # macos-13 was retired by GitHub (Dec 2025); macos-15-intel is the Intel runner that replaces it.
+            runner: macos-15-intel
+            optional: true
+            builder_args: '--mac dmg zip --x64'
+          - name: win-x64
+            runner: windows-latest
+            optional: false
+            builder_args: '--win nsis --x64'
+          - name: linux-x64
+            runner: ubuntu-22.04
+            optional: false
+            builder_args: '--linux AppImage deb --x64'
+    defaults:
+      run:
+        working-directory: src
+    steps:
+      - name: Check out the source repository at the tag (read-only deploy key)
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ env.SOURCE_REPO }}
+          ref: ${{ inputs.tag }}
+          ssh-key: ${{ secrets.SOURCE_DEPLOY_KEY }}
+          persist-credentials: false
+          path: src
+
+      - uses: actions/setup-node@v4
+        with:
+          # Node 22 LTS: runs electron-builder 26 and vite 8; the app itself runs on Electron 44's own Node.
+          node-version: 22
+          cache: npm
+          cache-dependency-path: |
+            src/package-lock.json
+            src/ui/package-lock.json
+
+      - name: Install dependencies (root)
+        # Native modules (node-pty, @ast-grep/napi) are N-API: prebuilt or built once against Node, ABI-stable in Electron.
+        run: npm ci
+
+      - name: Install dependencies (ui)
+        run: npm --prefix ui ci
+
+      - name: Build the UI
+        run: npm --prefix ui run build
+
+      - name: Check runtime dependencies and ship closure
+        # Every package/module the shipped code requires must be in the packaged app.
+        run: node scripts/check_runtime_deps.js
+
+      - name: Build installers
+        run: npx electron-builder ${{ matrix.builder_args }} --publish never
+
+      - name: List build output
+        shell: bash
+        run: ls -la release
+
+      - name: Check the packaged archive holds every shipped file and required package
+        shell: bash
+        run: |
+          ASAR="$(find release -type f -name app.asar -ipath '*resources*' | head -n 1)"
+          test -n "$ASAR" || { echo "no app.asar found under release/"; exit 1; }
+          echo "Archive: $ASAR"
+          node scripts/check_runtime_deps.js --asar "$ASAR"
+          # no-test-seams-in-release: a release archive must never carry the test-seams marker (it switches the test hooks on). Checked by name as well, independent of the script.
+          if node -e "const a=require('@electron/asar');process.exit(a.listPackage(process.argv[1]).some(p=>/(^|[\\\\/])test-seams\\.json$/.test(p))?1:0)" "$ASAR"; then echo "no-test-seams-in-release: ok"; else echo "FAIL no-test-seams-in-release: $ASAR contains test-seams.json"; exit 1; fi
+
+      - name: Smoke test the packaged app (macOS)
+        if: runner.os == 'macOS'
+        shell: bash
+        run: |
+          APP="$(ls -d release/mac*/'Deterministic Coder.app' | head -n 1)"
+          echo "Smoke: $APP"
+          node scripts/ci-smoke.js "$APP/Contents/MacOS/Deterministic Coder"
+
+      - name: Smoke test the packaged app (Windows)
+        if: runner.os == 'Windows'
+        shell: bash
+        run: node scripts/ci-smoke.js "release/win-unpacked/Deterministic Coder.exe"
+
+      - name: Smoke test the packaged app (Linux, AppImage under xvfb)
+        if: runner.os == 'Linux'
+        shell: bash
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y xvfb libgtk-3-0 libnss3 libasound2 libgbm1 libxss1 libxtst6 libatk-bridge2.0-0
+          chmod +x release/Deterministic-Coder-linux-x64.AppImage
+          # No FUSE on runners: extract-and-run. Chromium's sandbox cannot start here, hence --no-sandbox.
+          APPIMAGE_EXTRACT_AND_RUN=1 xvfb-run -a node scripts/ci-smoke.js release/Deterministic-Coder-linux-x64.AppImage --no-sandbox
+
+      - name: Collect installers and checksums
+        shell: bash
+        run: |
+          mkdir -p out
+          # Installers only (no blockmaps or update metadata).
+          for f in release/Deterministic-Coder-*.dmg release/Deterministic-Coder-*.zip release/Deterministic-Coder-*.exe release/Deterministic-Coder-*.AppImage release/Deterministic-Coder-*.deb; do
+            if [ -f "$f" ]; then cp "$f" out/; fi
+          done
+          cd out
+          ls -la
+          # shasum on macOS, sha256sum on Linux and Git Bash for Windows
+          if command -v sha256sum >/dev/null 2>&1; then
+            sha256sum Deterministic-Coder-* | tee "SHA256-${{ matrix.name }}.txt"
+          else
+            shasum -a 256 Deterministic-Coder-* | tee "SHA256-${{ matrix.name }}.txt"
+          fi
+
+      - name: Upload the installers to the draft release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release upload "$TAG" out/Deterministic-Coder-* --clobber --repo "$GITHUB_REPOSITORY"
+
+
+  checksums:
+    name: write SHA256SUMS.txt
+    needs: build
+    # A failed optional (continue-on-error) job still counts as success here, so a missing Intel mac build does not block this job;
+    # a failed required job skips it.
+    runs-on: ubuntu-22.04
+    timeout-minutes: 20
+    steps:
+      - name: Download the installers from the draft release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release download "$TAG" --repo "$GITHUB_REPOSITORY" --dir merged --pattern 'Deterministic-Coder-*'
+
+      - name: Write SHA256SUMS.txt
+        run: |
+          cd merged
+          sha256sum Deterministic-Coder-* | sort -k2 > SHA256SUMS.txt
+          ls -la
+          cat SHA256SUMS.txt
+
+      - name: Upload SHA256SUMS.txt to the draft release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release upload "$TAG" merged/SHA256SUMS.txt --clobber --repo "$GITHUB_REPOSITORY"
