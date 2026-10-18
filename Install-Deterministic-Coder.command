@@ -1,5 +1,5 @@
 #!/bin/bash
-# Deterministic Coder installer for macOS, as a file you double-click.
+# Lens Code installer for macOS, as a file you double-click.
 #
 # It holds no install logic of its own. It downloads install.sh from the address below with curl, checks that
 # what it got is a non-empty shell script, runs it in this Terminal window (so you see the same steps and
@@ -29,8 +29,8 @@ finish() {
   exit "$1"
 }
 
-if [ -t 1 ]; then printf '\033]0;Deterministic Coder installer\007'; fi
-printf 'Deterministic Coder installer\n\n'
+if [ -t 1 ]; then printf '\033]0;Lens Code installer\007'; fi
+printf 'Lens Code installer\n\n'
 printf 'This window downloads the installer script from GitHub and runs it.\n'
 printf 'Source: %s\n\n' "$DC_INSTALL_SH_URL"
 
