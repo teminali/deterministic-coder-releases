@@ -1,4 +1,4 @@
-# Builds the unsigned beta installers for Deterministic Coder on GitHub's runners and keeps them as a DRAFT release of THIS
+# Builds the unsigned beta installers for Lens Code on GitHub's runners and keeps them as a DRAFT release of THIS
 # public repository. The source code lives in a separate PRIVATE repository (teminali/deterministic-coder); this workflow
 # reads it with a read-only deploy key (secret SOURCE_DEPLOY_KEY), builds the tag you name, and never publishes: the owner
 # publishes the draft by hand after the release gate has passed (docs/RELEASING.md in the source repository).
@@ -68,7 +68,7 @@ jobs:
           if gh release view "$TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
             gh release edit "$TAG" --repo "$GITHUB_REPOSITORY" --notes-file "src/release-notes/$TAG.md"
           else
-            gh release create "$TAG" --repo "$GITHUB_REPOSITORY" --draft --title "Deterministic Coder $TAG" --notes-file "src/release-notes/$TAG.md"
+            gh release create "$TAG" --repo "$GITHUB_REPOSITORY" --draft --title "Lens Code $TAG" --notes-file "src/release-notes/$TAG.md"
           fi
 
   build:
@@ -156,14 +156,14 @@ jobs:
         if: runner.os == 'macOS'
         shell: bash
         run: |
-          APP="$(ls -d release/mac*/'Deterministic Coder.app' | head -n 1)"
+          APP="$(ls -d release/mac*/'Lens Code.app' | head -n 1)"
           echo "Smoke: $APP"
-          node scripts/ci-smoke.js "$APP/Contents/MacOS/Deterministic Coder"
+          node scripts/ci-smoke.js "$APP/Contents/MacOS/Lens Code"
 
       - name: Smoke test the packaged app (Windows)
         if: runner.os == 'Windows'
         shell: bash
-        run: node scripts/ci-smoke.js "release/win-unpacked/Deterministic Coder.exe"
+        run: node scripts/ci-smoke.js "release/win-unpacked/Lens Code.exe"
 
       - name: Smoke test the packaged app (Linux, AppImage under xvfb)
         if: runner.os == 'Linux'
@@ -171,32 +171,32 @@ jobs:
         run: |
           sudo apt-get update -y
           sudo apt-get install -y xvfb libgtk-3-0 libnss3 libasound2 libgbm1 libxss1 libxtst6 libatk-bridge2.0-0
-          chmod +x release/Deterministic-Coder-linux-x64.AppImage
+          chmod +x release/Lens-Code-linux-x64.AppImage
           # No FUSE on runners: extract-and-run. Chromium's sandbox cannot start here, hence --no-sandbox.
-          APPIMAGE_EXTRACT_AND_RUN=1 xvfb-run -a node scripts/ci-smoke.js release/Deterministic-Coder-linux-x64.AppImage --no-sandbox
+          APPIMAGE_EXTRACT_AND_RUN=1 xvfb-run -a node scripts/ci-smoke.js release/Lens-Code-linux-x64.AppImage --no-sandbox
 
       - name: Collect installers and checksums
         shell: bash
         run: |
           mkdir -p out
           # Installers only (no blockmaps or update metadata).
-          for f in release/Deterministic-Coder-*.dmg release/Deterministic-Coder-*.zip release/Deterministic-Coder-*.exe release/Deterministic-Coder-*.AppImage release/Deterministic-Coder-*.deb; do
+          for f in release/Lens-Code-*.dmg release/Lens-Code-*.zip release/Lens-Code-*.exe release/Lens-Code-*.AppImage release/Lens-Code-*.deb; do
             if [ -f "$f" ]; then cp "$f" out/; fi
           done
           cd out
           ls -la
           # shasum on macOS, sha256sum on Linux and Git Bash for Windows
           if command -v sha256sum >/dev/null 2>&1; then
-            sha256sum Deterministic-Coder-* | tee "SHA256-${{ matrix.name }}.txt"
+            sha256sum Lens-Code-* | tee "SHA256-${{ matrix.name }}.txt"
           else
-            shasum -a 256 Deterministic-Coder-* | tee "SHA256-${{ matrix.name }}.txt"
+            shasum -a 256 Lens-Code-* | tee "SHA256-${{ matrix.name }}.txt"
           fi
 
       - name: Upload the installers to the draft release
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release upload "$TAG" out/Deterministic-Coder-* --clobber --repo "$GITHUB_REPOSITORY"
+        run: gh release upload "$TAG" out/Lens-Code-* --clobber --repo "$GITHUB_REPOSITORY"
 
 
   checksums:
@@ -210,12 +210,12 @@ jobs:
       - name: Download the installers from the draft release
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release download "$TAG" --repo "$GITHUB_REPOSITORY" --dir merged --pattern 'Deterministic-Coder-*'
+        run: gh release download "$TAG" --repo "$GITHUB_REPOSITORY" --dir merged --pattern 'Lens-Code-*'
 
       - name: Write SHA256SUMS.txt
         run: |
           cd merged
-          sha256sum Deterministic-Coder-* | sort -k2 > SHA256SUMS.txt
+          sha256sum Lens-Code-* | sort -k2 > SHA256SUMS.txt
           ls -la
           cat SHA256SUMS.txt
 
