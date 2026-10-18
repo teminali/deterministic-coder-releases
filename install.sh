@@ -1,5 +1,5 @@
 #!/bin/sh
-# Deterministic Coder installer for macOS and Linux.
+# Lens Code installer for macOS and Linux.
 #
 #   curl -fsSL https://raw.githubusercontent.com/teminali/deterministic-coder-releases/main/install.sh | sh
 #
@@ -28,11 +28,13 @@
 
 set -eu
 
-DC_APP_NAME="Deterministic Coder"
-DC_APP_BUNDLE="Deterministic Coder.app"
+DC_APP_NAME="Lens Code"
+DC_APP_BUNDLE="Lens Code.app"
+DC_OLD_APP_NAME="Deterministic Coder"
+DC_OLD_APP_BUNDLE="Deterministic Coder.app"
 DC_DEFAULT_BASE="https://github.com/teminali/deterministic-coder-releases/releases/latest/download"
 DC_RELEASES_PAGE="https://github.com/teminali/deterministic-coder-releases/releases/latest"
-DC_DOWNLOAD_PAGE="https://deterministiccoder.web.app/#download"
+DC_DOWNLOAD_PAGE="https://lenscode.web.app/#download"
 DC_SUMS_NAME="SHA256SUMS.txt"
 DC_TMP=""
 DC_POLL=""
@@ -303,7 +305,7 @@ cleanup() {
 
 usage() {
   cat <<'USAGE'
-Deterministic Coder installer (macOS and Linux)
+Lens Code installer (macOS and Linux)
 
 Usage: install.sh [--uninstall] [--help]
 
@@ -511,16 +513,44 @@ mac_dest_dir() {
 # Only a copy running from exactly the given path is asked to quit; never anything else,
 # and never by force.
 mac_quit_running() {
+  DC_QUIT_NAME="${2:-$DC_APP_NAME}"
   if pgrep -f "$1/Contents/MacOS/" >/dev/null 2>&1; then
-    note "Asking the running $DC_APP_NAME to quit..."
+    note "Asking the running $DC_QUIT_NAME to quit..."
     osascript -e "tell application \"$1\" to quit" >/dev/null 2>&1 </dev/null || true
     DC_WAIT=0
     while pgrep -f "$1/Contents/MacOS/" >/dev/null 2>&1; do
       DC_WAIT=$((DC_WAIT + 1))
-      if [ "$DC_WAIT" -gt 20 ]; then fail "$DC_APP_NAME is still running. Quit it (Cmd-Q) and run this again." "Quit $DC_APP_NAME with Cmd-Q, then run the same command again."; fi
+      if [ "$DC_WAIT" -gt 20 ]; then fail "$DC_QUIT_NAME is still running. Quit it (Cmd-Q) and run this again." "Quit $DC_QUIT_NAME with Cmd-Q, then run the same command again."; fi
       sleep 1
     done
   fi
+}
+
+# Every app folder this script may use. An explicit DC_INSTALL_DIR means that folder only.
+mac_app_dirs() {
+  if [ -n "${DC_INSTALL_DIR:-}" ]; then
+    printf '%s\n' "$DC_INSTALL_DIR"
+    return
+  fi
+  printf '%s\n' "${DC_SYSTEM_APPS_DIR:-/Applications}" "${DC_USER_APPS_DIR:-$HOME/Applications}"
+}
+
+# Quit and remove the pre-rename bundle after the new copy is verified.
+mac_remove_old_apps() {
+  DC_APP_DIRS="$(mac_app_dirs)"
+  OLD_IFS="$IFS"
+  IFS='
+'
+  for DC_DIR in $DC_APP_DIRS; do
+    DC_OLD_APP_PATH="$DC_DIR/$DC_OLD_APP_BUNDLE"
+    [ -e "$DC_OLD_APP_PATH" ] || continue
+    if rm -rf "${DC_OLD_APP_PATH:?}"; then
+      say "Removed the old $DC_OLD_APP_NAME at $DC_OLD_APP_PATH"
+    else
+      note "Could not remove the old $DC_OLD_APP_NAME at $DC_OLD_APP_PATH."
+    fi
+  done
+  IFS="$OLD_IFS"
 }
 
 mac_version() {
@@ -538,7 +568,7 @@ mac_system_path() {
 mac_prepare() {
   mac_system_path
   command -v ditto >/dev/null 2>&1 || fail "ditto is missing; this does not look like macOS."
-  DC_ASSET="Deterministic-Coder-mac-$DC_CPU.zip"
+  DC_ASSET="Lens-Code-mac-$DC_CPU.zip"
   mac_dest_dir
   DC_DEST="$DC_DEST_DIR/$DC_APP_BUNDLE"
   DC_TT5="Installing into $DC_DEST_DIR"
@@ -566,6 +596,17 @@ mac_install_app() {
     rm -rf "${DC_NEW:?}"
     fail "the app's code signature did not verify. Nothing was installed."
   fi
+  # Quit an older install wherever it lives; two copies must not share one profile while the new copy is put in place.
+  DC_APP_DIRS="$(mac_app_dirs)"
+  OLD_IFS="$IFS"
+  IFS='
+'
+  for DC_DIR in $DC_APP_DIRS; do
+    DC_OLD_APP_PATH="$DC_DIR/$DC_OLD_APP_BUNDLE"
+    [ -e "$DC_OLD_APP_PATH" ] || continue
+    mac_quit_running "$DC_OLD_APP_PATH" "$DC_OLD_APP_NAME"
+  done
+  IFS="$OLD_IFS"
   mac_quit_running "$DC_DEST"
   if [ -e "$DC_DEST" ]; then
     mv "$DC_DEST" "$DC_OLD" || { rm -rf "${DC_NEW:?}"; fail "could not replace the existing $DC_DEST"; }
@@ -582,6 +623,8 @@ mac_install_app() {
   DC_VER="$(mac_version "$DC_DEST")"
   DC_WHERE="$DC_DEST"
   DC_FIRST="Installed $DC_APP_NAME $DC_VER"
+  # The new copy is in place and verified; only now remove the pre-rename bundle so a failure above leaves it usable.
+  mac_remove_old_apps
 }
 
 # Step 6 on macOS.
@@ -604,16 +647,24 @@ mac_launch() {
 mac_uninstall() {
   mac_system_path
   DC_FOUND=0
-  for DC_DIR in "${DC_INSTALL_DIR:-}" "${DC_SYSTEM_APPS_DIR:-/Applications}" "${DC_USER_APPS_DIR:-$HOME/Applications}"; do
-    [ -n "$DC_DIR" ] || continue
-    if [ -e "$DC_DIR/$DC_APP_BUNDLE" ]; then
-      mac_quit_running "$DC_DIR/$DC_APP_BUNDLE"
-      rm -rf "${DC_DIR:?}/$DC_APP_BUNDLE" || fail "could not remove $DC_DIR/$DC_APP_BUNDLE"
-      say "Removed $DC_DIR/$DC_APP_BUNDLE"
+  # Remove either the current bundle or the pre-rename one, in every app folder that may hold it.
+  for DC_BUNDLE in "$DC_APP_BUNDLE" "$DC_OLD_APP_BUNDLE"; do
+    [ -n "$DC_BUNDLE" ] || continue
+    DC_BUNDLE_NAME="$DC_APP_NAME"
+    if [ "$DC_BUNDLE" = "$DC_OLD_APP_BUNDLE" ]; then DC_BUNDLE_NAME="$DC_OLD_APP_NAME"; fi
+    DC_APP_DIRS="$(mac_app_dirs)"
+    OLD_IFS="$IFS"
+    IFS='
+'
+    for DC_DIR in $DC_APP_DIRS; do
+      DC_BUNDLE_PATH="$DC_DIR/$DC_BUNDLE"
+      [ -e "$DC_BUNDLE_PATH" ] || continue
+      mac_quit_running "$DC_BUNDLE_PATH" "$DC_BUNDLE_NAME"
+      rm -rf "${DC_BUNDLE_PATH:?}" || fail "could not remove $DC_BUNDLE_PATH"
+      say "Removed $DC_BUNDLE_PATH"
       DC_FOUND=1
-    fi
-    # With an explicit install folder, that is the only place we touch.
-    [ -z "${DC_INSTALL_DIR:-}" ] || break
+    done
+    IFS="$OLD_IFS"
   done
   if [ "$DC_FOUND" != 1 ]; then say "$DC_APP_NAME is not installed."; fi
   say "Your settings and projects were left in place."
@@ -637,7 +688,7 @@ linux_paths() {
 # Step 1 on Linux.
 linux_prepare() {
   [ "$DC_CPU" = x64 ] || fail "the Linux build is 64-bit Intel/AMD (x64) only; this machine is $DC_CPU." "Use a 64-bit Intel/AMD Linux machine, or a Mac."
-  DC_ASSET="Deterministic-Coder-linux-x64.AppImage"
+  DC_ASSET="Lens-Code-linux-x64.AppImage"
   linux_paths
   DC_TT5="Installing into $DC_BIN_DIR"
   DC_SYSDESC="Linux $DC_CPU"
