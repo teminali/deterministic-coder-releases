@@ -1,4 +1,4 @@
-# Deterministic Coder installer for Windows (PowerShell 5.1 or newer).
+# Lens Code installer for Windows (PowerShell 5.1 or newer).
 #
 #   irm https://raw.githubusercontent.com/teminali/deterministic-coder-releases/main/install.ps1 | iex
 #
@@ -18,12 +18,12 @@
 # Everything is inside a function that is called on the last line, so a download that is
 # cut short runs nothing.
 
-function Install-DeterministicCoder {
+function Install-LensCode {
     $ErrorActionPreference = 'Stop'
     Set-StrictMode -Version 2.0
 
-    $appName   = 'Deterministic Coder'
-    $assetName = 'Deterministic-Coder-win-x64.exe'
+    $appName   = 'Lens Code'
+    $assetName = 'Lens-Code-win-x64.exe'
     $sumsName  = 'SHA256SUMS.txt'
     $base = $env:DC_BASE_URL
     if ([string]::IsNullOrEmpty($base)) {
@@ -123,12 +123,12 @@ function Install-DeterministicCoder {
 }
 
 try {
-    Install-DeterministicCoder
+    Install-LensCode
 }
 catch {
     Write-Host ''
     Write-Host "Install stopped: $($_.Exception.Message)" -ForegroundColor Red
-    Write-Host 'Next step: run the same command again. If it stops the same way, use the installer file instead: open https://deterministiccoder.web.app/#download and download the installer for Windows.' -ForegroundColor Red
+    Write-Host 'Next step: run the same command again. If it stops the same way, use the installer file instead: open https://lenscode.web.app/#download and download the installer for Windows.' -ForegroundColor Red
     # Do not close the user's PowerShell window when run through "irm | iex".
     if ($MyInvocation.ScriptName) { exit 1 }
 }
