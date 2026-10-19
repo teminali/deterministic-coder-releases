@@ -2,23 +2,23 @@
 
 Installers for **Lens Code** (formerly Deterministic Coder), the desktop app of the Lens coding agent: it edits the real files in your folder and you watch every change. You sign in with your Lens account; a free account gets a daily allowance of credits, and Lens Pro and Lens Max give you more. Website: https://lenscode.web.app. The \`lens\` terminal command has its own releases: https://github.com/teminali/lens-releases
 
-Current version: **v0.3.0 (beta, unsigned)**.
+Current version: **v0.3.1 (beta, unsigned)**.
 
-### What's new in v0.3.0
+### What's new in v0.3.1
 
-- **DeepSeek Personal Protections & Consent Gate.** A consent dialog explicitly informs users that the bridge drives their web account via private browser automation, requires explicit agreement before opening login, and notes that Google sign-in is not supported (email/phone required).
-- **Bridge Usage Governor & Request Pacing.** Strict single-concurrency mutex, minimum 1-second pacing between requests, 20/min burst rate limiting, and a hard 300 calls/day cap to protect accounts from being flagged.
-- **Settings Usage Monitor & Reset.** Live counter displays today's DeepSeek calls (`X of 300 DeepSeek calls today`) with a manual Reset button.
-- **Failure Discipline & 429/403 Cooldowns.** Authentication failures and login redirects immediately mark the session expired without retrying; rate limits (HTTP 429/403) trigger an automatic 5-minute cooldown.
-- **Tightened File Permissions.** Credentials (`deepseek_session.json`) and usage logs are stored strictly with mode `0600` inside a `0700` app directory.
+- **5-Hour Session Lifecycle.** DeepSeek personal sessions are nominally valid for approximately 5 hours from sign-in, matching the provider's token validity window. Settings shows the session validity and exact expiration time.
+- **Reliable Login Window.** Removed premature login completion on anonymous cookies (`ds_session_id`). The login window remains open until real user authentication credentials (`userToken`) are provided and verified.
+- **WAF & Session Cookie Forwarding.** Web client requests forward session and WAF cookies alongside Bearer tokens, eliminating intermittent WAF rejections.
+- **Clean Failure Termination.** Authentication expiration mid-turn stops immediately with an explanatory assistant message, avoiding repeated client retries and false governor usage increments.
 
-Release notes: https://github.com/teminali/deterministic-coder-releases/releases/tag/v0.3.0
+Release notes: https://github.com/teminali/deterministic-coder-releases/releases/tag/v0.3.1
 
 ## Release status
 
 | Version | State | What was verified | What was not |
 | --- | --- | --- | --- |
-| v0.3.0 | Published, Latest | Installer checksums, CI launch checks on macOS, Windows and Linux, release gate validation, governor rate-limiting and pacing logic, consent gate and credential isolation checks. | A real mobile-money payment, the Windows and Linux installers on real computers, automated Google sign-in (use email/phone). |
+| v0.3.1 | Published, Latest | Installer checksums, CI launch checks on macOS, Windows and Linux, release gate validation, governor rate-limiting and pacing logic, consent gate and credential isolation checks, 5-hour session lifecycle. | A real mobile-money payment, the Windows and Linux installers on real computers, automated Google sign-in (use email/phone). |
+| v0.3.0 | Superseded | Installer checksums, CI launch checks on macOS, Windows and Linux, release gate validation, governor rate-limiting and pacing logic, consent gate and credential isolation checks. | A real mobile-money payment, the Windows and Linux installers on real computers, automated Google sign-in (use email/phone). |
 | v0.2.2 | Superseded | Installer checksums, CI launch checks on macOS, Windows and Linux, 25 multi-provider gateway tests, and live website reasoning verification. | A real mobile-money payment, the Windows and Linux installers on real computers. |
 | v0.2.1 | Superseded | Installer checksums, the packaged app's UI check on macOS (10 of 10), CI launch checks on macOS, Windows and Linux, 14 live app scenarios on 2026-10-19 (see the notes). | A real mobile-money payment, the Windows and Linux installers on real computers. |
 | v0.2.0 | Superseded | Installer checksums, the packaged app's UI check on macOS (10 of 10), CI launch checks, the live app scenarios on 2026-10-18. | A real mobile-money payment, the Windows and Linux installers on real computers. |
