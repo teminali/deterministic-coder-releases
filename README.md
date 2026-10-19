@@ -2,23 +2,24 @@
 
 Installers for **Lens Code** (formerly Deterministic Coder), the desktop app of the Lens coding agent: it edits the real files in your folder and you watch every change. You sign in with your Lens account; a free account gets a daily allowance of credits, and Lens Pro and Lens Max give you more. Website: https://lenscode.web.app. The `lens` terminal command has its own releases: https://github.com/teminali/lens-releases
 
-Current version: **v0.2.0 (beta, unsigned)**.
+Current version: **v0.2.1 (beta, unsigned)**.
 
-### What's new in v0.2.0
+### What's new in v0.2.1
 
-- **The app is Lens Code**, with a new logo.
-- **One account, no local models.** The app reaches its models through the Lens platform: there are no local models and no keys of your own to add. The model picker lists only what Lens gives you.
-- **Three packages**: Free, Lens Pro and Lens Max, with a usage card in the sidebar that shows the share of today's credits used and when they come back.
-- **The Lens CLI looks after itself.** The app installs and updates it from a signed public feed and refuses a release that is not signed.
-- **Known limits:** nothing in this release is marked covered by a unit test (every claim is listed under Not covered in the release notes); buying with mobile money was tested on the server side only, not with a real payment; the Windows and Linux installers are built and launch-checked by CI but were not run by us. The first update from Deterministic Coder 0.1.1 closes the app and does not reopen it: open Lens Code yourself, or run the installer below once (it also removes the old app).
+- **Code and Work.** Two tabs in the title bar. In Work, a Markdown document or a CSV sheet opens in the same editor panel as code, and the eye icon shows a read-only preview.
+- **Settings and Customize pages** next to your files: General and Permissions, and the MCP servers, skills and plugins of the Lens on your computer. Adding a server or plugin only asks; you answer in a separate approval window (Deny, Allow once, Always allow). Full access needs a confirmation and shows a chip while it is on.
+- **Title bar, loading screen and preview** reworked: a sidebar toggle (Cmd+B), Back and Forward through files, a one-row preview that can go full screen.
+- **Fix:** an MCP server switched off and on again quickly could keep showing as Off.
+- **Known limits:** nothing in this release is marked covered by a unit test (every claim is listed under Not covered in the release notes); buying with mobile money was tested on the server side only, not with a real payment; the Windows and Linux installers (and the system window controls they use) are built and launch-checked by CI but were not run by us; a project's own Lens settings are ignored until you run `lens trust` in its folder, and the app does not ask yet.
 
-Release notes: https://github.com/teminali/deterministic-coder-releases/releases/tag/v0.2.0
+Release notes: https://github.com/teminali/deterministic-coder-releases/releases/tag/v0.2.1
 
 ## Release status
 
 | Version | State | What was verified | What was not |
 | --- | --- | --- | --- |
-| v0.2.0 | Published, Latest | Installer checksums, the packaged app's UI check on macOS (10 of 10), CI launch checks on macOS, Windows and Linux, the live app scenarios on 2026-10-18 (see the notes). | A real mobile-money payment, the Windows and Linux installers on real computers, the relaunch after the first update from 0.1.1. |
+| v0.2.1 | Published, Latest | Installer checksums, the packaged app's UI check on macOS (10 of 10), CI launch checks on macOS, Windows and Linux, 14 live app scenarios on 2026-10-19 (see the notes), and the update from 0.2.0 to 0.2.1 with the published macOS installers against a local copy of the feed (23 of 23 checks). | A real mobile-money payment, the Windows and Linux installers on real computers, the update through the public feed itself. |
+| v0.2.0 | Superseded | Installer checksums, the packaged app's UI check on macOS (10 of 10), CI launch checks, the live app scenarios on 2026-10-18. | A real mobile-money payment, the Windows and Linux installers on real computers. |
 | v0.1.1 and earlier | Superseded (Deterministic Coder) | See each release's notes. | |
 
 ## Download
