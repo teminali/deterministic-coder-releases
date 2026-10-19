@@ -2,23 +2,24 @@
 
 Installers for **Lens Code** (formerly Deterministic Coder), the desktop app of the Lens coding agent: it edits the real files in your folder and you watch every change. You sign in with your Lens account; a free account gets a daily allowance of credits, and Lens Pro and Lens Max give you more. Website: https://lenscode.web.app. The `lens` terminal command has its own releases: https://github.com/teminali/lens-releases
 
-Current version: **v0.2.1 (beta, unsigned)**.
+Current version: **v0.2.2 (beta, unsigned)**.
 
-### What's new in v0.2.1
+### What's new in v0.2.2
 
-- **Code and Work.** Two tabs in the title bar. In Work, a Markdown document or a CSV sheet opens in the same editor panel as code, and the eye icon shows a read-only preview.
-- **Settings and Customize pages** next to your files: General and Permissions, and the MCP servers, skills and plugins of the Lens on your computer. Adding a server or plugin only asks; you answer in a separate approval window (Deny, Allow once, Always allow). Full access needs a confirmation and shows a chip while it is on.
-- **Title bar, loading screen and preview** reworked: a sidebar toggle (Cmd+B), Back and Forward through files, a one-row preview that can go full screen.
-- **Fix:** an MCP server switched off and on again quickly could keep showing as Off.
-- **Known limits:** nothing in this release is marked covered by a unit test (every claim is listed under Not covered in the release notes); buying with mobile money was tested on the server side only, not with a real payment; the Windows and Linux installers (and the system window controls they use) are built and launch-checked by CI but were not run by us; a project's own Lens settings are ignored until you run `lens trust` in its folder, and the app does not ask yet.
+- **Multi-Model Catalog & Live Reasoning.** 6 models available in the model selector across Google, Anthropic, and DeepSeek. Streaming reasoning blocks render live with timers (`Thought for Xs`).
+- **DeepSeek Account Linking.** Settings includes a Models section where you can link your DeepSeek account for free model access, badged as personal.
+- **Workspace Performance.** File scanning is capped and skips worktrees, preventing UI freezes on large repositories.
+- **Folder Trust Prompts.** Opening a project folder that contains custom Lens settings prompts you to review and trust it.
+- **Bundled Lens CLI 0.1.20.** Includes the latest Lens CLI release.
 
-Release notes: https://github.com/teminali/deterministic-coder-releases/releases/tag/v0.2.1
+Release notes: https://github.com/teminali/deterministic-coder-releases/releases/tag/v0.2.2
 
 ## Release status
 
 | Version | State | What was verified | What was not |
 | --- | --- | --- | --- |
-| v0.2.1 | Published, Latest | Installer checksums, the packaged app's UI check on macOS (10 of 10), CI launch checks on macOS, Windows and Linux, 14 live app scenarios on 2026-10-19 (see the notes), and the update from 0.2.0 to 0.2.1 with the published macOS installers against a local copy of the feed (23 of 23 checks). | A real mobile-money payment, the Windows and Linux installers on real computers, the update through the public feed itself. |
+| v0.2.2 | Published, Latest | Installer checksums, CI launch checks on macOS, Windows and Linux, 25 multi-provider gateway tests, and live website reasoning verification. | A real mobile-money payment, the Windows and Linux installers on real computers. |
+| v0.2.1 | Superseded | Installer checksums, the packaged app's UI check on macOS (10 of 10), CI launch checks on macOS, Windows and Linux, 14 live app scenarios on 2026-10-19 (see the notes). | A real mobile-money payment, the Windows and Linux installers on real computers. |
 | v0.2.0 | Superseded | Installer checksums, the packaged app's UI check on macOS (10 of 10), CI launch checks, the live app scenarios on 2026-10-18. | A real mobile-money payment, the Windows and Linux installers on real computers. |
 | v0.1.1 and earlier | Superseded (Deterministic Coder) | See each release's notes. | |
 
