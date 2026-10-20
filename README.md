@@ -2,9 +2,17 @@
 
 Installers for **Lens Code** (formerly Deterministic Coder), the desktop app of the Lens coding agent: it edits the real files in your folder and you watch every change. You sign in with your Lens account; a free account gets a daily allowance of credits, and Lens Plus, Lens Pro and Lens Max give you more. Website: https://lenscode.web.app. The `lens` terminal command has its own releases: https://github.com/teminali/lens-releases
 
-Current version: **v0.3.6 (beta, unsigned)**.
+Current version: **v0.4.0 (beta, unsigned)**.
 
-### What's new in v0.3.6
+### What's new in v0.4.0
+
+- **A game starter.** `/game space dodger` writes a ready-to-run 3D game project into a new folder, with no model and no network: a playable starter game (physics and glow), the three.js and Rapier files exactly as released, and a guide for the chat's model. Open preview plays it with nothing to install. Ask the chat to change it and it does: in the live check the model added an enemy that chases the ball, and touched nothing else.
+- **Your own Gemini account.** Link it in Settings > Models (you sign in to Google once in a Chrome window the app opens) and chat with its models, next to the DeepSeek account lane. It drives your own Gemini web account, so Google's terms may not allow it and each message is a chat in your Gemini history; the consent window says so. If a personal model you chose cannot answer, Lens Code says so instead of answering with another model.
+- **The page check reads a page's references from its own folder,** so it no longer calls a game's own files missing.
+
+Release notes: https://github.com/teminali/deterministic-coder-releases/releases/tag/v0.4.0
+
+### What was new in v0.3.6
 
 - **Voice that works.** Press the microphone button in the chat box and say what you want: your words appear in the box while you talk, and when you stop they are cleaned up into the message a senior engineer would have typed, using the names of your own files and functions to fix words the computer heard wrong. It never sends anything for you, the microphone is off the moment you stop, and if anything fails your own words are kept. The first time, your computer asks whether Lens Code may use the microphone. What you say is sent through the Lens service to Google's Gemini to be turned into text (see the Privacy Policy); Lens Code keeps no copy.
 - **Clear chat is in the chat header,** between History and Close.
@@ -35,7 +43,8 @@ Release notes: https://github.com/teminali/deterministic-coder-releases/releases
 
 | Version | State | What was verified | What was not |
 | --- | --- | --- | --- |
-| v0.3.6 | Published, Latest | What the release notes list: the new `voice` live scenario (89 of 89 with real Gemini, 74 of 74 on a clean export of the release files), the other live scenarios that need no personal account (26 passed on 2026-10-20), the packaged UI check (10 of 10), the packaged self-update from 0.3.5 (23 of 23), the release gate. | A real microphone on a real Mac and the installed app's capture path, Swahili and other languages spoken, noisy rooms, a real mobile-money or USDC payment, the Windows and Linux installers on real computers. |
+| v0.4.0 | Published, Latest | What the release notes list: the live scenarios that need no personal account (29 of 29 passed on 2026-10-21, two after a rerun with a real model), the game starter with a real model (47 of 47), the Gemini account lane on a stand-in page (63 of 63), the packaged UI check (10 of 10), the packaged self-update from 0.3.6 (23 of 23), the release gate. | The Gemini account lane with a paid account and the real page's thinking menus, the DeepSeek lane with a real login (its shared relay changed), a real microphone on a real Mac, the Windows and Linux installers on real computers, a real mobile-money or USDC payment. |
+| v0.3.6 | Superseded | What the release notes list: the new `voice` live scenario (89 of 89 with real Gemini, 74 of 74 on a clean export of the release files), the other live scenarios that need no personal account (26 passed on 2026-10-20), the packaged UI check (10 of 10), the packaged self-update from 0.3.5 (23 of 23), the release gate. | A real microphone on a real Mac and the installed app's capture path, Swahili and other languages spoken, noisy rooms, a real mobile-money or USDC payment, the Windows and Linux installers on real computers. |
 | v0.3.5 | Superseded | What the release notes list: the live app scenarios (25 passed on 2026-10-20, two after a rerun), the packaged UI check (10 of 10), the packaged self-update from 0.3.4 (23 of 23), the release gate. | A real mobile-money or USDC payment, the Windows and Linux installers on real computers, a real Intel Mac or macOS 12, real sites other than the one tried. |
 | v0.3.4 | Superseded | What the release notes list under Covered (live runs of the real app, the DeepSeek unit tests, the release gate). | A real mobile-money payment, the Windows and Linux installers on real computers. |
 | v0.3.1 to v0.3.3 | Superseded | See each release's notes. | |
