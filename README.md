@@ -2,9 +2,16 @@
 
 Installers for **Lens Code** (formerly Deterministic Coder), the desktop app of the Lens coding agent: it edits the real files in your folder and you watch every change. You sign in with your Lens account; a free account gets a daily allowance of credits, and Lens Plus, Lens Pro and Lens Max give you more. Website: https://lenscode.web.app. The `lens` terminal command has its own releases: https://github.com/teminali/lens-releases
 
-Current version: **v0.3.5 (beta, unsigned)**.
+Current version: **v0.3.6 (beta, unsigned)**.
 
-### What's new in v0.3.5
+### What's new in v0.3.6
+
+- **Voice that works.** Press the microphone button in the chat box and say what you want: your words appear in the box while you talk, and when you stop they are cleaned up into the message a senior engineer would have typed, using the names of your own files and functions to fix words the computer heard wrong. It never sends anything for you, the microphone is off the moment you stop, and if anything fails your own words are kept. The first time, your computer asks whether Lens Code may use the microphone. What you say is sent through the Lens service to Google's Gemini to be turned into text (see the Privacy Policy); Lens Code keeps no copy.
+- **Clear chat is in the chat header,** between History and Close.
+
+Release notes: https://github.com/teminali/deterministic-coder-releases/releases/tag/v0.3.6
+
+### What was new in v0.3.5
 
 - **Skills from plain words.** Write "clone https://example.com/ as plain html" (or copy, mirror, duplicate) and the Site cloner runs, without typing /clone and without the model. Sentences that only look similar, such as "clone the repo", still go to the model.
 - **Copies that work.** Lens opens each copied site like a visitor would and fetches the files its pages ask for while they run (script chunks, data files, images that load as you scroll), so a copy of a modern site no longer comes out blank.
@@ -28,7 +35,8 @@ Release notes: https://github.com/teminali/deterministic-coder-releases/releases
 
 | Version | State | What was verified | What was not |
 | --- | --- | --- | --- |
-| v0.3.5 | Published, Latest | What the release notes list: the live app scenarios (25 passed on 2026-10-20, two after a rerun), the packaged UI check (10 of 10), the packaged self-update from 0.3.4 (23 of 23), the release gate. | A real mobile-money or USDC payment, the Windows and Linux installers on real computers, a real Intel Mac or macOS 12, real sites other than the one tried. |
+| v0.3.6 | Published, Latest | What the release notes list: the new `voice` live scenario (89 of 89 with real Gemini, 74 of 74 on a clean export of the release files), the other live scenarios that need no personal account (26 passed on 2026-10-20), the packaged UI check (10 of 10), the packaged self-update from 0.3.5 (23 of 23), the release gate. | A real microphone on a real Mac and the installed app's capture path, Swahili and other languages spoken, noisy rooms, a real mobile-money or USDC payment, the Windows and Linux installers on real computers. |
+| v0.3.5 | Superseded | What the release notes list: the live app scenarios (25 passed on 2026-10-20, two after a rerun), the packaged UI check (10 of 10), the packaged self-update from 0.3.4 (23 of 23), the release gate. | A real mobile-money or USDC payment, the Windows and Linux installers on real computers, a real Intel Mac or macOS 12, real sites other than the one tried. |
 | v0.3.4 | Superseded | What the release notes list under Covered (live runs of the real app, the DeepSeek unit tests, the release gate). | A real mobile-money payment, the Windows and Linux installers on real computers. |
 | v0.3.1 to v0.3.3 | Superseded | See each release's notes. | |
 | v0.3.0 | Superseded | Unit tests for DeepSeek tool relay, DSML/tool_call parser, markerHold, usage governor, permissions, pacing, cooldowns, and full suite tests. | A real mobile-money payment, the Windows and Linux installers on real computers. |
