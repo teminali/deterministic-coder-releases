@@ -354,10 +354,6 @@ detect_arch() {
     fi
   fi
   case "$DC_CPU" in arm64 | x64) ;; *) fail "unsupported processor: $DC_CPU" ;; esac
-  # Lens, the agent the app talks to, is built for Apple silicon only: an Intel Mac would install an app that cannot answer a chat.
-  if [ "$DC_PLAT" = mac ] && [ "$DC_CPU" = x64 ]; then
-    fail "Lens Code needs a Mac with Apple silicon (M1 or newer); this Mac has an Intel processor." "Lens, the agent the app talks to, has no Intel build yet, so the app could not answer a chat on this Mac." final
-  fi
   # The app declares macOS 13 as its minimum (LSMinimumSystemVersion), so macOS refuses to open it on 12 or older.
   if [ "$DC_PLAT" = mac ] && [ -z "${DC_OS:-}" ]; then
     DC_MACV="$(sw_vers -productVersion 2>/dev/null || true)"

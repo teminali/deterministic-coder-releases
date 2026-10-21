@@ -2,9 +2,20 @@
 
 Installers for **Lens Code** (formerly Deterministic Coder), the desktop app of the Lens coding agent: it edits the real files in your folder and you watch every change. You sign in with your Lens account; a free account gets a daily allowance of credits, and Lens Plus, Lens Pro and Lens Max give you more. Website: https://lenscode.web.app. The `lens` terminal command has its own releases: https://github.com/teminali/lens-releases
 
-Current version: **v0.4.0 (beta, unsigned)**.
+Current version: **v0.4.1 (beta, unsigned)**.
 
-### What's new in v0.4.0
+### What's new in v0.4.1
+
+- **Run works for the projects you already have.** Open a folder that holds a Vite web app and the play button above the editor starts it with the project's own dev script, shows it in Preview and becomes Stop. Say "run the app" in the chat and Lens does the same. One Run button now; the App tab is gone.
+- **A new blank editor.** A status pill, a headline and three cards of ways to start in each mode: Games, Apps and Web in Code; Slides, Sheets and Docs in Work. A start only puts words in the chat box.
+- **`/game` takes a sentence** of up to 600 characters. Its first clause names the folder and the title; the whole idea is kept for Lens. Games are marked Beta.
+- **VS Code's file and folder icons** in the file tree and the editor tabs, with light variants (CC BY-SA 4.0, credited in the app).
+- **Lens for more computers.** The Lens agent (0.1.25) is published for Intel Macs, Linux and Windows as well as Apple silicon, and Lens Code installs the one that fits. Lens Code's own Mac build for Intel Macs is in the download table.
+- **Clean-up.** Unused code and styles were removed and the guide, README and specs now say what the app does today.
+
+Release notes: https://github.com/teminali/deterministic-coder-releases/releases/tag/v0.4.1
+
+### What was new in v0.4.0
 
 - **A game starter.** `/game space dodger` writes a ready-to-run 3D game project into a new folder, with no model and no network: a playable starter game (physics and glow), the three.js and Rapier files exactly as released, and a guide for the chat's model. Open preview plays it with nothing to install. Ask the chat to change it and it does: in the live check the model added an enemy that chases the ball, and touched nothing else.
 - **Your own Gemini account.** Link it in Settings > Models (you sign in to Google once in a Chrome window the app opens) and chat with its models, next to the DeepSeek account lane. It drives your own Gemini web account, so Google's terms may not allow it and each message is a chat in your Gemini history; the consent window says so. If a personal model you chose cannot answer, Lens Code says so instead of answering with another model.
@@ -43,7 +54,8 @@ Release notes: https://github.com/teminali/deterministic-coder-releases/releases
 
 | Version | State | What was verified | What was not |
 | --- | --- | --- | --- |
-| v0.4.0 | Published, Latest | What the release notes list: the live scenarios that need no personal account (29 of 29 passed on 2026-10-21, two after a rerun with a real model), the game starter with a real model (47 of 47), the Gemini account lane on a stand-in page (63 of 63), the packaged UI check (10 of 10), the packaged self-update from 0.3.6 (23 of 23), the release gate. | The Gemini account lane with a paid account and the real page's thinking menus, the DeepSeek lane with a real login (its shared relay changed), a real microphone on a real Mac, the Windows and Linux installers on real computers, a real mobile-money or USDC payment. |
+| v0.4.1 | Published, Latest | What the release notes list: the live scenarios that need no personal account (33 passed on 2026-10-21, two after a rerun), the Run, blank editor and file icon scenarios, the packaged UI check (10 of 10), the packaged self-update from 0.4.0 (23 of 23, against a local stand-in feed), the checksums of every installer, the release gate. | The Windows and Linux installers and the Intel Mac build on real computers, a real mobile-money or USDC payment, a real npm install and Vite start on a project a model built, dictation with a real microphone. |
+| v0.4.0 | Superseded | What the release notes list: the live scenarios that need no personal account (29 of 29 passed on 2026-10-21, two after a rerun with a real model), the game starter with a real model (47 of 47), the Gemini account lane on a stand-in page (63 of 63), the packaged UI check (10 of 10), the packaged self-update from 0.3.6 (23 of 23), the release gate. | The Gemini account lane with a paid account and the real page's thinking menus, the DeepSeek lane with a real login (its shared relay changed), a real microphone on a real Mac, the Windows and Linux installers on real computers, a real mobile-money or USDC payment. |
 | v0.3.6 | Superseded | What the release notes list: the new `voice` live scenario (89 of 89 with real Gemini, 74 of 74 on a clean export of the release files), the other live scenarios that need no personal account (26 passed on 2026-10-20), the packaged UI check (10 of 10), the packaged self-update from 0.3.5 (23 of 23), the release gate. | A real microphone on a real Mac and the installed app's capture path, Swahili and other languages spoken, noisy rooms, a real mobile-money or USDC payment, the Windows and Linux installers on real computers. |
 | v0.3.5 | Superseded | What the release notes list: the live app scenarios (25 passed on 2026-10-20, two after a rerun), the packaged UI check (10 of 10), the packaged self-update from 0.3.4 (23 of 23), the release gate. | A real mobile-money or USDC payment, the Windows and Linux installers on real computers, a real Intel Mac or macOS 12, real sites other than the one tried. |
 | v0.3.4 | Superseded | What the release notes list under Covered (live runs of the real app, the DeepSeek unit tests, the release gate). | A real mobile-money payment, the Windows and Linux installers on real computers. |
@@ -62,6 +74,8 @@ Stable links that always point to the latest release:
 | --- | --- | --- |
 | macOS, Apple Silicon (dmg) | `Lens-Code-mac-arm64.dmg` | https://github.com/teminali/deterministic-coder-releases/releases/latest/download/Lens-Code-mac-arm64.dmg |
 | macOS, Apple Silicon (zip) | `Lens-Code-mac-arm64.zip` | https://github.com/teminali/deterministic-coder-releases/releases/latest/download/Lens-Code-mac-arm64.zip |
+| macOS, Intel (dmg) | `Lens-Code-mac-x64.dmg` | https://github.com/teminali/deterministic-coder-releases/releases/latest/download/Lens-Code-mac-x64.dmg |
+| macOS, Intel (zip) | `Lens-Code-mac-x64.zip` | https://github.com/teminali/deterministic-coder-releases/releases/latest/download/Lens-Code-mac-x64.zip |
 | Windows 10/11, x64 | `Lens-Code-win-x64.exe` | https://github.com/teminali/deterministic-coder-releases/releases/latest/download/Lens-Code-win-x64.exe |
 | Linux x64, AppImage | `Lens-Code-linux-x64.AppImage` | https://github.com/teminali/deterministic-coder-releases/releases/latest/download/Lens-Code-linux-x64.AppImage |
 | Linux x64, Debian/Ubuntu | `Lens-Code-linux-x64.deb` | https://github.com/teminali/deterministic-coder-releases/releases/latest/download/Lens-Code-linux-x64.deb |
@@ -70,9 +84,9 @@ File names never contain a version number. A platform whose build did not pass t
 
 ## Requirements
 
-- macOS 13 (Ventura) or later on Apple silicon, Windows 10 or later, or a recent 64-bit Linux desktop (GTK 3). The app does not open on macOS 12 or older, and Lens has no Intel Mac build.
+- macOS 13 (Ventura) or later on Apple silicon or on an Intel Mac that can run macOS 13, Windows 10 or later, or a recent 64-bit Linux desktop (GTK 3). The app does not open on macOS 12 or older.
 - A network connection and a Lens account (free; sign in from the Account tab).
-- To run a generated app with Run app: Python 3.9 or newer and Node.js with npm. Building and editing need neither.
+- To run a generated app with Run: Python 3.9 or newer for a Python backend, Node.js with npm for a web app. Building and editing need neither.
 
 ## First launch (the builds are unsigned)
 
