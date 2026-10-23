@@ -2,9 +2,25 @@
 
 Installers for **Lens Code** (formerly Deterministic Coder), the desktop app of the Lens coding agent: it edits the real files in your folder and you watch every change. You sign in with your Lens account; a free account gets a daily allowance of credits, and Lens Plus, Lens Pro and Lens Max give you more. Website: https://lenscode.web.app. The `lens` terminal command has its own releases: https://github.com/teminali/lens-releases
 
-Current version: **v0.4.4 (beta, unsigned)**.
+Current version: **v0.4.5 (beta, unsigned)**.
 
-### What's new in v0.4.4
+### What's new in v0.4.5
+
+**Read this first: the DeepSeek and Gemini account links are gone.** If you linked your own DeepSeek or Gemini account, the sign-in the app saved for it is deleted the first time 0.4.5 starts, with one note in Settings > Models, and a model you had chosen from those accounts says it is no longer offered. To use DeepSeek, Gemini or any provider that answers like OpenAI's API, add it yourself: **Settings > Models > Add provider** (a name, the provider's address, your own key, the model names). The key is kept in one file that only your user account can read, not in the macOS Keychain or the Windows credential store (on Windows that rests on the folder's own permissions); it is never shown on the page or written to a log, and it goes only to the address you typed.
+
+- **A Lens block at the top of Settings > Models:** Lens, the built-in provider that signs in with your Lens account, with its default model and a status (In use, Not in use, Signed out, Not available right now). If you chose another model, **Reset to default** goes back.
+- **One slot in the chat box:** the microphone until you type something to send, then Send, and Stop while Lens works. It never moves. (While the box has text, or while Lens works, the microphone is not offered.)
+- **Run is green and Stop is red** in the toolbar.
+- **Reopening a folder shows what is on disk.** A file changed, deleted or added by another program while Lens was closed shows as it is, and saving never writes the old text over the newer file. This fixes a way to lose work.
+- **Opening a file never changes it** (byte-order mark, CRLF and other line ends keep their exact bytes), and a folder or archive that cannot be opened says why in a sentence.
+- **The project map is honest and fast:** it says when it could not read the whole project, counts routes, tests, models and dependencies once each, and a project built to be slow can no longer hang it.
+- **The Lens agent's updater** refuses a bad download cleanly and leaves nothing behind.
+
+**How it was tested:** every claim ran live in the real app. The 37 required scenarios passed twice in a row on the final code, 138 deliberately planted defects were all caught (2 cannot change behaviour), and the built Mac app (Apple silicon) was checked on the installer's own bytes, including the update from 0.4.4. **Not run:** Windows, Linux and the Intel Mac build beyond a start-up check, and everything that needs a real account or a real model (named in the release notes under Not proven). The installers are not code-signed: on macOS, if the app will not open, allow it in System Settings > Privacy & Security (Open Anyway).
+
+Release notes: https://github.com/teminali/deterministic-coder-releases/releases/tag/v0.4.5
+
+### What was new in v0.4.4
 
 **The DeepSeek change in this version was tested against a scripted copy of chat.deepseek.com, not the real DeepSeek.** One real run of 0.4.3 on a real account built a landing page in 4 minutes 15 seconds with no cut-off and no refusal; it is where the problem fixed here was found. This fix has not been run on a real account.
 
