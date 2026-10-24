@@ -2,9 +2,21 @@
 
 Installers for **Lens Code** (formerly Deterministic Coder), the desktop app of the Lens coding agent: it edits the real files in your folder and you watch every change. You sign in with your Lens account; a free account gets a daily allowance of credits, and Lens Plus, Lens Pro and Lens Max give you more. Website: https://lenscode.web.app. The `lens` terminal command has its own releases: https://github.com/teminali/lens-releases
 
-Current version: **v0.4.5 (beta, unsigned)**.
+Current version: **v0.4.6 (beta, unsigned)**.
 
-### What's new in v0.4.5
+### What's new in v0.4.6
+
+- **Lens can look at what it builds, and use the app.** After Lens builds a page, the app opens it in a hidden browser at phone, tablet and desktop widths and measures it (script errors, a blank page, broken images, sideways scroll, controls that are too small), and Lens fixes what is measurably wrong, once. Lens can also read the app's screen, run its commands, fill in a form and read back what the screen says.
+- **A start that cannot read your project folder now says so, and fixes itself where it can.** The update from 0.4.4 to 0.4.5 left one person with an empty project tree and a chat that only said it could not answer; the first start of a new version is now guarded against that.
+- **Permissions and effort buttons in the chat box.** Ask me first or Full access, and Default, Low, Medium or High effort, right where you type.
+- **Lens can ask you a question**, with two to six options, your own words, or skip, in a panel above the chat box that you can answer from the keyboard.
+- **A saved provider key stays with its address**, and dictation is tidied by a small text model first.
+
+**How it was tested:** every claim ran live in the real app. All 44 required scenarios pass on the final code; 281 deliberately planted defects were run and 276 were caught (5 cannot change behaviour); the built Mac app (Apple silicon) was checked after it was built (17 scenarios, the UI check, and the update from 0.4.4). **Not proven:** no real model has used the new tools yet, Windows and Linux were not run, and buying a plan with mobile money or USDC has not been tried with a real payment. The release notes say exactly what ran and what did not.
+
+Release notes: https://github.com/teminali/deterministic-coder-releases/releases/tag/v0.4.6
+
+### What was new in v0.4.5
 
 **Read this first: the DeepSeek and Gemini account links are gone.** If you linked your own DeepSeek or Gemini account, the sign-in the app saved for it is deleted the first time 0.4.5 starts, with one note in Settings > Models, and a model you had chosen from those accounts says it is no longer offered. To use DeepSeek, Gemini or any provider that answers like OpenAI's API, add it yourself: **Settings > Models > Add provider** (a name, the provider's address, your own key, the model names). The key is kept in one file that only your user account can read, not in the macOS Keychain or the Windows credential store (on Windows that rests on the folder's own permissions); it is never shown on the page or written to a log, and it goes only to the address you typed.
 
