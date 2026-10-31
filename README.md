@@ -2,9 +2,20 @@
 
 Installers for **Lens Code** (formerly Deterministic Coder), the desktop app of the Lens coding agent: it edits the real files in your folder and you watch every change. You sign in with your Lens account; a free account gets a daily allowance of credits, and Lens Plus, Lens Pro and Lens Max give you more. Website: https://lenscode.web.app. The `lens` terminal command has its own releases: https://github.com/teminali/lens-releases
 
-Current version: **v0.4.6 (beta, unsigned)**.
+Current version: **v0.4.7 (beta, unsigned)**.
 
-### What's new in v0.4.6
+### What's new in v0.4.7
+
+- **A page from a picture, from words, or from another page.** Attach a picture of a page and Lens measures it, draws a first copy of its own (words as real text, laid out in rows and columns, buttons and form fields as real elements) and the model finishes it, scored against the picture. Describe a page in words and Lens writes its design first, then the page. From one page, ask for the other pages of the site in the same design. Every page goes through your project's design system: plain HTML and CSS, React with Vite, Tailwind, Vue, Svelte or Next.js.
+- **Coding agents beside Lens.** The terminal panel has an Agents tab with Claude Code, Codex, Gemini CLI, Qwen Code, Qoder CLI, Cline, opencode and Pi, each in a tab of its own. Lens can hand one of them a task: you approve the exact command, the agent works in its tab, and its report comes back to the chat. The terminal opens to full height, has several tabs, and shows colour.
+- **Stop stops a copy at once**, even while the app is still drawing its first draft.
+- **Fast mode waits for its models**: until every small model it needs is installed, the work runs in normal mode and the status bar shows what is downloading.
+
+**How it was tested:** every claim ran live in the real app. All 68 required scenarios pass on the final code; 281 deliberately planted defects were run and 276 were caught (5 cannot change behaviour); the built Mac app (Apple silicon) was checked after it was built (17 scenarios). **Not proven:** five real-model runs are still red (copying a hard picture, a long Gemini battle, a chart in a Work sheet that runs past its pane, two Lens agent website runs), five open bugs are listed by name (a copied page does not link to the pages written beside it yet), no real coding agent was handed a task in the checks, and Windows and Linux were not run. The release notes say exactly what ran and what did not.
+
+Release notes: https://github.com/teminali/deterministic-coder-releases/releases/tag/v0.4.7
+
+### What was new in v0.4.6
 
 - **Lens can look at what it builds, and use the app.** After Lens builds a page, the app opens it in a hidden browser at phone, tablet and desktop widths and measures it (script errors, a blank page, broken images, sideways scroll, controls that are too small), and Lens fixes what is measurably wrong, once. Lens can also read the app's screen, run its commands, fill in a form and read back what the screen says.
 - **A start that cannot read your project folder now says so, and fixes itself where it can.** The update from 0.4.4 to 0.4.5 left one person with an empty project tree and a chat that only said it could not answer; the first start of a new version is now guarded against that.
