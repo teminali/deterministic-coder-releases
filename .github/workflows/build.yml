@@ -83,7 +83,7 @@ jobs:
       matrix:
         include:
           - name: mac-arm64
-            runner: macos-14
+            runner: macos-15
             optional: false
             builder_args: '--mac dmg zip --arm64'
           - name: mac-x64
