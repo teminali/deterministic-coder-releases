@@ -2,9 +2,21 @@
 
 Installers for **Lens Code** (formerly Deterministic Coder), the desktop app of the Lens coding agent: it edits the real files in your folder and you watch every change. You sign in with your Lens account; a free account gets a daily allowance of credits, and Lens Plus, Lens Pro and Lens Max give you more. Website: https://lenscode.web.app. The `lens` terminal command has its own releases: https://github.com/teminali/lens-releases
 
-Current version: **v0.4.7 (beta, unsigned)**.
+Current version: **v0.4.11 (beta, unsigned)**.
 
-### What's new in v0.4.7
+### What's new in v0.4.11
+
+- **A picture copy never ends worse than its first draft.** Each model round is judged against the best page so far; a round that matches less, hides words or adds problems is undone, and the copy card says which measure decided.
+- **No stand-ins.** People in a copy are the picture's own photographs, charts are the picture's own, logos are cut from the picture; the copy's buttons work through one small file Lens writes, with nothing loaded from the network.
+- **Better first drafts** of app screens, forms and dashboards, and no more half-hour freeze measuring a large page.
+- **The blank editor stays blank, and unsaved typing stays yours.** Since 0.4.8 every change on disk put the whole folder back over the editor and opened `index.html`; now only files that changed on disk are taken.
+- **Copies in React build again** (TypeScript refused the copied page since the behaviour file arrived).
+
+**How it was tested:** all 68 required scenarios pass on the final code, and 17 on the built Mac app (Apple silicon); 281 planted defects were run and every one a check can see was caught (5 cannot change behaviour); the built app updated itself from 0.4.10 (26/26 checks); picture copy ran live on DeepSeek, Gemini and Qoder (62/62 each).
+
+Release notes: https://github.com/teminali/deterministic-coder-releases/releases/tag/v0.4.11
+
+### What was new in v0.4.7
 
 - **A page from a picture, from words, or from another page.** Attach a picture of a page and Lens measures it, draws a first copy of its own (words as real text, laid out in rows and columns, buttons and form fields as real elements) and the model finishes it, scored against the picture. Describe a page in words and Lens writes its design first, then the page. From one page, ask for the other pages of the site in the same design. Every page goes through your project's design system: plain HTML and CSS, React with Vite, Tailwind, Vue, Svelte or Next.js.
 - **Coding agents beside Lens.** The terminal panel has an Agents tab with Claude Code, Codex, Gemini CLI, Qwen Code, Qoder CLI, Cline, opencode and Pi, each in a tab of its own. Lens can hand one of them a task: you approve the exact command, the agent works in its tab, and its report comes back to the chat. The terminal opens to full height, has several tabs, and shows colour.
