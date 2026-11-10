@@ -2,9 +2,19 @@
 
 Installers for **Lens Code** (formerly Deterministic Coder), the desktop app of the Lens coding agent: it edits the real files in your folder and you watch every change. You sign in with your Lens account; a free account gets a daily allowance of credits, and Lens Plus, Lens Pro and Lens Max give you more. Website: https://lenscode.web.app. The `lens` terminal command has its own releases: https://github.com/teminali/lens-releases
 
-Current version: **v0.4.15 (beta, unsigned)**.
+Current version: **v0.4.16 (beta, unsigned)**.
 
-### What's new in v0.4.15
+### What's new in v0.4.16
+
+- **Voice runs on this computer.** The app bundles whisper.cpp and llama.cpp for macOS, Windows and Linux. Speech is transcribed by Whisper base and tidied by Qwen 2.5 1.5B, with no cloud voice fallback, sign-in or credit charge. The first microphone press offers a one-time download of the two models, about 1.2 GB, with progress, Stop, Continue, Range resume, retry and checksum refusal; the microphone opens only when the models are ready.
+- **Each five-hour credit window holds the old full-day allowance.** The weekly cap stays at seven days and resets Monday 00:00 UTC. Cache creation is charged separately from plain input, including Anthropic's one-hour cache rate. An OpenRouter 402 moves to another key instead of reporting the person's balance as too low.
+- **Small fixes:** voice threads follow the machine's available CPUs so a small CI Mac meets the rewrite deadline, links to a local address no longer request a remote favicon, the chat transcript reads inline link labels as one sentence, the microphone fill is measured after its click transition settles, and live-writing lights and background-task controls use the shared UI tokens.
+
+**How it was tested:** this release is published under a one-time owner waiver, not a full release-gate pass. 13 of 86 required scenarios are green on these bytes (21 red, 52 stale), and the gate prints NOT RELEASE-READY. Covered claims include local voice (87/87 checks), the one-time model download (26/26), the gateway credit window (194/194), payments (108/108), the app run tools (32/32), the voice engine inside the built Mac app (download, warm, transcribe, rewrite) and the packaged UI check (9/9, zero page errors). No mutation ledger, no packaged scenario sweep and no Lens-versus-Claude-Code benchmark ran; device-pane (22/25) and tool-loading (64/65) are red. Every unrun or failing check is named in the release notes.
+
+Release notes: https://github.com/teminali/deterministic-coder-releases/releases/tag/v0.4.16
+
+### What was new in v0.4.15
 
 - **Cloudflare Worker edge infrastructure & failover.** Lens Code platform requests connect primarily to Cloudflare Workers (lens-edge), with automatic failover to the secondary address on network errors or 502/503/504 responses.
 - **Soul memory.** Lens maintains cross-project context and preferences without intrusive cards or manual configuration, with settings to disable, silence, or erase memories.
@@ -73,11 +83,11 @@ Release notes: https://github.com/teminali/deterministic-coder-releases/releases
 |---|---|---|---|
 | macOS | [Lens-Code-mac-arm64.dmg](https://github.com/teminali/deterministic-coder-releases/releases/latest/download/Lens-Code-mac-arm64.dmg) | Disk image | Apple silicon (M1, M2, M3, M4) |
 | macOS | [Lens-Code-mac-arm64.zip](https://github.com/teminali/deterministic-coder-releases/releases/latest/download/Lens-Code-mac-arm64.zip) | Archive | Apple silicon (M1, M2, M3, M4) |
-| macOS | [Lens-Code-mac-x64.dmg](https://github.com/teminali/deterministic-coder-releases/releases/latest/download/Lens-Code-mac-x64.dmg) | Disk image | Intel |
-| macOS | [Lens-Code-mac-x64.zip](https://github.com/teminali/deterministic-coder-releases/releases/latest/download/Lens-Code-mac-x64.zip) | Archive | Intel |
 | Windows | [Lens-Code-win-x64.exe](https://github.com/teminali/deterministic-coder-releases/releases/latest/download/Lens-Code-win-x64.exe) | Installer | 64-bit |
 | Linux | [Lens-Code-linux-x64.AppImage](https://github.com/teminali/deterministic-coder-releases/releases/latest/download/Lens-Code-linux-x64.AppImage) | AppImage | 64-bit |
 | Linux | [Lens-Code-linux-x64.deb](https://github.com/teminali/deterministic-coder-releases/releases/latest/download/Lens-Code-linux-x64.deb) | Package | 64-bit Debian, Ubuntu |
+
+Intel Mac builds were not produced for v0.4.16: its optional CI job failed. Apple silicon builds are above.
 
 Checksums: [SHA256SUMS.txt](https://github.com/teminali/deterministic-coder-releases/releases/latest/download/SHA256SUMS.txt)
 
