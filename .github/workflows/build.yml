@@ -75,7 +75,7 @@ jobs:
     name: build (${{ matrix.name }})
     needs: prepare
     runs-on: ${{ matrix.runner }}
-    timeout-minutes: 40
+    timeout-minutes: 75
     # The Intel mac job must never block the release; every other job must pass.
     continue-on-error: ${{ matrix.optional }}
     strategy:
@@ -135,6 +135,11 @@ jobs:
         # Every package/module the shipped code requires must be in the packaged app.
         run: node scripts/check_runtime_deps.js
 
+      - name: Build the voice engine (whisper.cpp and llama.cpp at pinned commits, static)
+        # vendor/voice/<os>-<arch>: electron-builder copies it into the app's resources as voice/, and build/afterPack.js refuses a build without it.
+        shell: bash
+        run: node scripts/build_voice_runtimes.js
+
       - name: Build installers
         run: npx electron-builder ${{ matrix.builder_args }} --publish never
 
@@ -151,6 +156,24 @@ jobs:
           node scripts/check_runtime_deps.js --asar "$ASAR"
           # no-test-seams-in-release: a release archive must never carry the test-seams marker (it switches the test hooks on). Checked by name as well, independent of the script.
           if node -e "const a=require('@electron/asar');process.exit(a.listPackage(process.argv[1]).some(p=>/(^|[\\\\/])test-seams\\.json$/.test(p))?1:0)" "$ASAR"; then echo "no-test-seams-in-release: ok"; else echo "FAIL no-test-seams-in-release: $ASAR contains test-seams.json"; exit 1; fi
+
+      - name: Keep the voice models between runs (pinned Hugging Face commits, checked by sha256 anyway)
+        uses: actions/cache@v4
+        with:
+          path: ${{ runner.temp }}/voice-models
+          key: voice-models-5359861c-91cad511
+
+      - name: Check the voice engine inside the packaged app (download, warm, transcribe, rewrite)
+        shell: bash
+        run: |
+          case "$RUNNER_OS" in
+            macOS) VOICE="$(ls -d release/mac*/'Lens Code.app' | head -n 1)/Contents/Resources/voice" ;;
+            Windows) VOICE="release/win-unpacked/resources/voice" ;;
+            Linux) VOICE="release/linux-unpacked/resources/voice" ;;
+          esac
+          echo "Voice runtimes: $VOICE"
+          ls -la "$VOICE"
+          node scripts/check_voice_engine.js --runtimes "$VOICE" --models "$RUNNER_TEMP/voice-models"
 
       - name: Smoke test the packaged app (macOS)
         if: runner.os == 'macOS'
