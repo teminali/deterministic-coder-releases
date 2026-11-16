@@ -1,5 +1,5 @@
 #!/bin/sh
-# Lens Code installer for macOS and Linux.
+# lenslet installer for macOS and Linux.
 #
 #   curl -fsSL https://raw.githubusercontent.com/teminali/deterministic-coder-releases/main/install.sh | sh
 #
@@ -28,13 +28,20 @@
 
 set -eu
 
-DC_APP_NAME="Lens Code"
-DC_APP_BUNDLE="Lens Code.app"
-DC_OLD_APP_NAME="Deterministic Coder"
-DC_OLD_APP_BUNDLE="Deterministic Coder.app"
+DC_APP_NAME="lenslet"
+DC_APP_BUNDLE="lenslet.app"
+# The bundle inside the download keeps its old name (the build's productName), because the updater inside
+# copies that already installed swap it in place and start ".../Contents/MacOS/Lens Code" again. A fresh
+# install puts it in place as lenslet.app; the executable inside keeps its name.
+DC_ZIP_BUNDLE="Lens Code.app"
+# Older installs this one replaces, one bundle per line: Lens Code (until 0.4.16) and Deterministic Coder (before that).
+DC_OLD_APP_BUNDLES="Lens Code.app
+Deterministic Coder.app"
+# The window class the app's windows carry on Linux (its executable's product name), for the menu entry.
+DC_WM_CLASS="Lens Code"
 DC_DEFAULT_BASE="https://github.com/teminali/deterministic-coder-releases/releases/latest/download"
 DC_RELEASES_PAGE="https://github.com/teminali/deterministic-coder-releases/releases/latest"
-DC_DOWNLOAD_PAGE="https://lenscode.web.app/#download"
+DC_DOWNLOAD_PAGE="https://lenslet.web.app/#download"
 DC_SUMS_NAME="SHA256SUMS.txt"
 DC_TMP=""
 DC_POLL=""
@@ -310,7 +317,7 @@ cleanup() {
 
 usage() {
   cat <<'USAGE'
-Lens Code installer (macOS and Linux)
+lenslet installer (macOS and Linux)
 
 Usage: install.sh [--uninstall] [--help]
 
@@ -361,7 +368,7 @@ detect_arch() {
     case "$DC_MACMAJOR" in
       '' | *[!0-9]*) ;;
       *) if [ "$DC_MACMAJOR" -lt 13 ]; then
-           fail "Lens Code needs macOS 13 (Ventura) or later; this Mac has macOS $DC_MACV." "Update macOS if this Mac can run macOS 13. If it cannot, Lens Code does not support it." final
+           fail "$DC_APP_NAME needs macOS 13 (Ventura) or later; this Mac has macOS $DC_MACV." "Update macOS if this Mac can run macOS 13. If it cannot, $DC_APP_NAME does not support it." final
          fi ;;
     esac
   fi
@@ -512,8 +519,8 @@ mac_dest_dir() {
   fi
   DC_SYS="${DC_SYSTEM_APPS_DIR:-/Applications}"
   DC_USR="${DC_USER_APPS_DIR:-$HOME/Applications}"
-  # Update in place if it is already installed in the per-user folder.
-  if [ ! -e "$DC_SYS/$DC_APP_BUNDLE" ] && [ -e "$DC_USR/$DC_APP_BUNDLE" ] && [ -w "$DC_USR" ]; then
+  # Update in place if it is already installed in the per-user folder (under its name or an older one).
+  if ! mac_has_install "$DC_SYS" && mac_has_install "$DC_USR" && [ -w "$DC_USR" ]; then
     DC_DEST_DIR="$DC_USR"
     return
   fi
@@ -524,6 +531,19 @@ mac_dest_dir() {
   mkdir -p "$DC_USR" || fail "$DC_SYS is not writable and $DC_USR cannot be created"
   DC_DEST_DIR="$DC_USR"
   note "$DC_SYS is not writable here, so the app goes into $DC_USR (no sudo is used)."
+}
+
+# Whether the folder holds this app, under its name or an older one.
+mac_has_install() {
+  [ -e "$1/$DC_APP_BUNDLE" ] && return 0
+  OLD_IFS="$IFS"
+  IFS='
+'
+  for DC_B in $DC_OLD_APP_BUNDLES; do
+    if [ -e "$1/$DC_B" ]; then IFS="$OLD_IFS"; return 0; fi
+  done
+  IFS="$OLD_IFS"
+  return 1
 }
 
 # Only a copy running from exactly the given path is asked to quit; never anything else,
@@ -551,20 +571,23 @@ mac_app_dirs() {
   printf '%s\n' "${DC_SYSTEM_APPS_DIR:-/Applications}" "${DC_USER_APPS_DIR:-$HOME/Applications}"
 }
 
-# Quit and remove the pre-rename bundle after the new copy is verified.
+# Remove the bundles of older names (Lens Code, Deterministic Coder) after the new copy is verified.
 mac_remove_old_apps() {
   DC_APP_DIRS="$(mac_app_dirs)"
   OLD_IFS="$IFS"
   IFS='
 '
   for DC_DIR in $DC_APP_DIRS; do
-    DC_OLD_APP_PATH="$DC_DIR/$DC_OLD_APP_BUNDLE"
-    [ -e "$DC_OLD_APP_PATH" ] || continue
-    if rm -rf "${DC_OLD_APP_PATH:?}"; then
-      say "Removed the old $DC_OLD_APP_NAME at $DC_OLD_APP_PATH"
-    else
-      note "Could not remove the old $DC_OLD_APP_NAME at $DC_OLD_APP_PATH."
-    fi
+    for DC_OLD_APP_BUNDLE in $DC_OLD_APP_BUNDLES; do
+      DC_OLD_APP_PATH="$DC_DIR/$DC_OLD_APP_BUNDLE"
+      [ -e "$DC_OLD_APP_PATH" ] || continue
+      DC_OLD_APP_NAME="${DC_OLD_APP_BUNDLE%.app}"
+      if rm -rf "${DC_OLD_APP_PATH:?}"; then
+        say "Removed the old $DC_OLD_APP_NAME at $DC_OLD_APP_PATH"
+      else
+        note "Could not remove the old $DC_OLD_APP_NAME at $DC_OLD_APP_PATH."
+      fi
+    done
   done
   IFS="$OLD_IFS"
 }
@@ -597,12 +620,15 @@ mac_prepare() {
 mac_install_app() {
   mkdir "$DC_TMP/x"
   ditto -x -k "$DC_TMP/$DC_ASSET" "$DC_TMP/x" </dev/null >/dev/null 2>&1 || fail "the downloaded zip could not be unpacked."
-  [ -d "$DC_TMP/x/$DC_APP_BUNDLE" ] || fail "the download does not contain $DC_APP_BUNDLE. Nothing was installed."
+  # The download holds "Lens Code.app" (the bundle's own name); a build that is already called lenslet.app is taken as it is.
+  DC_SRC="$DC_TMP/x/$DC_ZIP_BUNDLE"
+  [ -d "$DC_TMP/x/$DC_APP_BUNDLE" ] && DC_SRC="$DC_TMP/x/$DC_APP_BUNDLE"
+  [ -d "$DC_SRC" ] || fail "the download does not contain $DC_ZIP_BUNDLE. Nothing was installed."
 
   DC_NEW="$DC_DEST_DIR/.dc-new.$$"
   DC_OLD="$DC_DEST_DIR/.dc-old.$$"
   rm -rf "${DC_NEW:?}"
-  ditto "$DC_TMP/x/$DC_APP_BUNDLE" "$DC_NEW" >/dev/null 2>&1 || { rm -rf "${DC_NEW:?}"; fail "could not copy the app into $DC_DEST_DIR"; }
+  ditto "$DC_SRC" "$DC_NEW" >/dev/null 2>&1 || { rm -rf "${DC_NEW:?}"; fail "could not copy the app into $DC_DEST_DIR"; }
   xattr -cr "$DC_NEW" 2>/dev/null || true
   if xattr -rl "$DC_NEW" 2>/dev/null | grep -q 'com\.apple\.quarantine'; then
     rm -rf "${DC_NEW:?}"
@@ -618,9 +644,11 @@ mac_install_app() {
   IFS='
 '
   for DC_DIR in $DC_APP_DIRS; do
-    DC_OLD_APP_PATH="$DC_DIR/$DC_OLD_APP_BUNDLE"
-    [ -e "$DC_OLD_APP_PATH" ] || continue
-    mac_quit_running "$DC_OLD_APP_PATH" "$DC_OLD_APP_NAME"
+    for DC_OLD_APP_BUNDLE in $DC_OLD_APP_BUNDLES; do
+      DC_OLD_APP_PATH="$DC_DIR/$DC_OLD_APP_BUNDLE"
+      [ -e "$DC_OLD_APP_PATH" ] || continue
+      mac_quit_running "$DC_OLD_APP_PATH" "${DC_OLD_APP_BUNDLE%.app}"
+    done
   done
   IFS="$OLD_IFS"
   mac_quit_running "$DC_DEST"
@@ -639,7 +667,7 @@ mac_install_app() {
   DC_VER="$(mac_version "$DC_DEST")"
   DC_WHERE="$DC_DEST"
   DC_FIRST="Installed $DC_APP_NAME $DC_VER"
-  # The new copy is in place and verified; only now remove the pre-rename bundle so a failure above leaves it usable.
+  # The new copy is in place and verified; only now remove the bundles of older names so a failure above leaves them usable.
   mac_remove_old_apps
 }
 
@@ -663,15 +691,14 @@ mac_launch() {
 mac_uninstall() {
   mac_system_path
   DC_FOUND=0
-  # Remove either the current bundle or the pre-rename one, in every app folder that may hold it.
-  for DC_BUNDLE in "$DC_APP_BUNDLE" "$DC_OLD_APP_BUNDLE"; do
-    [ -n "$DC_BUNDLE" ] || continue
-    DC_BUNDLE_NAME="$DC_APP_NAME"
-    if [ "$DC_BUNDLE" = "$DC_OLD_APP_BUNDLE" ]; then DC_BUNDLE_NAME="$DC_OLD_APP_NAME"; fi
-    DC_APP_DIRS="$(mac_app_dirs)"
-    OLD_IFS="$IFS"
-    IFS='
+  # Remove the current bundle and those of older names, in every app folder that may hold one.
+  OLD_IFS="$IFS"
+  IFS='
 '
+  for DC_BUNDLE in $DC_APP_BUNDLE $DC_OLD_APP_BUNDLES; do
+    [ -n "$DC_BUNDLE" ] || continue
+    DC_BUNDLE_NAME="${DC_BUNDLE%.app}"
+    DC_APP_DIRS="$(mac_app_dirs)"
     for DC_DIR in $DC_APP_DIRS; do
       DC_BUNDLE_PATH="$DC_DIR/$DC_BUNDLE"
       [ -e "$DC_BUNDLE_PATH" ] || continue
@@ -680,8 +707,8 @@ mac_uninstall() {
       say "Removed $DC_BUNDLE_PATH"
       DC_FOUND=1
     done
-    IFS="$OLD_IFS"
   done
+  IFS="$OLD_IFS"
   if [ "$DC_FOUND" != 1 ]; then say "$DC_APP_NAME is not installed."; fi
   say "Your settings and projects were left in place."
 }
@@ -719,7 +746,7 @@ linux_install_app() {
   mv -f "$DC_NEW" "$DC_BIN" || { rm -f "${DC_NEW:?}"; fail "could not replace $DC_BIN"; }
   {
     printf '[Desktop Entry]\nType=Application\nName=%s\nComment=Local-first AI coding IDE\n' "$DC_APP_NAME"
-    printf 'Exec="%s" %%U\nTerminal=false\nCategories=Development;IDE;\nStartupWMClass=%s\n' "$DC_BIN" "$DC_APP_NAME"
+    printf 'Exec="%s" %%U\nTerminal=false\nCategories=Development;IDE;\nStartupWMClass=%s\n' "$DC_BIN" "$DC_WM_CLASS"
   } >"$DC_DESK" || fail "could not write $DC_DESK"
 
   # An AppImage cannot report its version without being run, so say what was fetched.
