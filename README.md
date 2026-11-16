@@ -2,9 +2,15 @@
 
 Installers for **lenslet** (formerly Lens Code and Deterministic Coder), the desktop app of the Lens coding agent: it edits the real files in your folder and you watch every change. You sign in with your Lens account; a free account gets an allowance of credits (a 5-hour window and a weekly window), and Lens Pro, Lens Max and Lens Ultra give you more. Website: https://lenslet.web.app. The `lens` terminal command has its own releases: https://github.com/teminali/lens-releases
 
-Current version: **v0.4.17 (beta, unsigned)**.
+Current version: **v0.4.18 (beta, unsigned)**.
 
-### What's new in v0.4.17
+### What's new in v0.4.18
+
+- **Auto works again when you are signed in.** In v0.4.17 every request on Auto from a signed-in account failed with "The platform model service is temporarily unavailable". This release fixes only that; everything else is v0.4.17. It was released without the full release gate, on the owner's decision; the release notes list what was checked.
+
+Release notes: https://github.com/teminali/deterministic-coder-releases/releases/tag/v0.4.18
+
+### What was new in v0.4.17
 
 - **Lens Code is now called lenslet.** Your chats, projects and settings are kept. On a Mac the app file and the name in the menu bar stay "Lens Code" for now, so that updates from earlier versions keep working.
 - **Copying a design from a picture** cuts photographs out instead of redrawing them, matches the typeface, writes the page for every device and checks it at tablet and phone width.
@@ -135,7 +141,8 @@ Release notes: https://github.com/teminali/deterministic-coder-releases/releases
 
 | Version | State | What was verified | What was not |
 | --- | --- | --- | --- |
-| v0.4.17 | Published, Latest | Every step of the release gate but the benchmark step: all 88 required scenarios green on these exact bytes (5,617 checks), 14 scenarios on the packaged app and 3 on its test-seam build, twelve mutation families (362 planted defects, none surviving), the unit and logic tests and the build. | The benchmark step (owner's waiver: the Sonnet comparison in the notes is the evidence), the canary scenarios that need real models, paid services or the network (listed under Not proven in the notes), and the Windows, Linux and Intel Mac builds on real computers. |
+| v0.4.18 | Published, Latest | v0.4.17 plus one fix (Auto through the key relay): a check of the gateway against a stand-in relay that failed on v0.4.17 and passes here, the gateway's own tests, the shipped gateway file read out of the built app and checked, the update from v0.4.17 through the public feed. | The full sweep of live scenarios, the mutation families and the packaged checks were not run again (owner's decision: the build differs from v0.4.17 only in the gateway file); the benchmark step. |
+| v0.4.17 | Superseded | Every step of the release gate but the benchmark step: all 88 required scenarios green on these exact bytes (5,617 checks), 14 scenarios on the packaged app and 3 on its test-seam build, twelve mutation families (362 planted defects, none surviving), the unit and logic tests and the build. | The benchmark step (owner's waiver: the Sonnet comparison in the notes is the evidence), the canary scenarios that need real models, paid services or the network (listed under Not proven in the notes), and the Windows, Linux and Intel Mac builds on real computers. |
 | v0.4.16 | Superseded | What the release notes list under Covered: 14 claims, among them voice on this computer, the 5-hour and weekly credit windows and payments. 13 of the 86 required scenarios were green on these exact bytes. | 21 required scenarios were red and 52 were stale; the full sweep, the mutation family and the packaged checks did not complete, and the release gate prints NOT RELEASE-READY. Published under a one-time owner waiver; the release notes list every claim that is not covered. |
 | v0.4.5 to v0.4.15 | Superseded | See each release's notes. | |
 | v0.4.4 | Superseded | What the release notes list: 24 live scenarios on the final code (23 first time; app-chrome failed three loading-screen checks while the computer was busy and passed 33 of 33 on a rerun with nothing changed), every new check failed on the 0.4.3 code first, the packaged UI check (10 of 10), fifteen live scenarios on the packaged app (all passed), run-app (47 of 47) and work-tools (55 of 55) on the packaged test-seam build, the packaged self-update from 0.4.3 (23 of 23, against a local stand-in feed serving the published zip), the checksums of every installer, the release gate. | **Your own DeepSeek account on this code (tested on a stand-in only)**, whether the pace stops DeepSeek's throttling, the account label on a real account, the scenarios this release did not touch (payments, voice, site cloner, the gateway, the battle tests), Microsoft Word, Excel and PowerPoint opening the files made here, the Windows and Linux installers and the Intel Mac build on real computers, a real payment, dictation with a real microphone. |
