@@ -1,4 +1,4 @@
-# Lens Code installer for Windows (PowerShell 5.1 or newer).
+# lenslet installer for Windows (PowerShell 5.1 or newer).
 #
 #   irm https://raw.githubusercontent.com/teminali/deterministic-coder-releases/main/install.ps1 | iex
 #
@@ -18,11 +18,13 @@
 # Everything is inside a function that is called on the last line, so a download that is
 # cut short runs nothing.
 
-function Install-LensCode {
+function Install-lenslet {
     $ErrorActionPreference = 'Stop'
     Set-StrictMode -Version 2.0
 
-    $appName   = 'Lens Code'
+    $appName   = 'lenslet'
+    # The program keeps its old name (the build's productName), so the folder, the .exe and the process are still 'Lens Code'.
+    $exeName   = 'Lens Code'
     $assetName = 'Lens-Code-win-x64.exe'
     $sumsName  = 'SHA256SUMS.txt'
     $base = $env:DC_BASE_URL
@@ -89,13 +91,13 @@ function Install-LensCode {
         }
 
         # Ask a running copy to close; never force it.
-        $running = Get-Process -Name $appName -ErrorAction SilentlyContinue
+        $running = Get-Process -Name $exeName -ErrorAction SilentlyContinue
         if ($running) {
             Write-Host "Asking the running $appName to close..."
             foreach ($p in $running) { [void]$p.CloseMainWindow() }
             $deadline = (Get-Date).AddSeconds(20)
-            while ((Get-Process -Name $appName -ErrorAction SilentlyContinue) -and (Get-Date) -lt $deadline) { Start-Sleep -Seconds 1 }
-            if (Get-Process -Name $appName -ErrorAction SilentlyContinue) {
+            while ((Get-Process -Name $exeName -ErrorAction SilentlyContinue) -and (Get-Date) -lt $deadline) { Start-Sleep -Seconds 1 }
+            if (Get-Process -Name $exeName -ErrorAction SilentlyContinue) {
                 throw "$appName is still running. Close it and run this again."
             }
         }
@@ -105,7 +107,7 @@ function Install-LensCode {
         if ($proc.ExitCode -ne 0) { throw "The installer exited with code $($proc.ExitCode)." }
 
         # electron-builder NSIS, per-user: %LOCALAPPDATA%\Programs\<productName>\<productName>.exe
-        $exe = Join-Path $env:LOCALAPPDATA "Programs\$appName\$appName.exe"
+        $exe = Join-Path $env:LOCALAPPDATA "Programs\$exeName\$exeName.exe"
         if (-not (Test-Path -LiteralPath $exe)) {
             throw "The installer finished but $exe was not found."
         }
@@ -123,12 +125,12 @@ function Install-LensCode {
 }
 
 try {
-    Install-LensCode
+    Install-lenslet
 }
 catch {
     Write-Host ''
     Write-Host "Install stopped: $($_.Exception.Message)" -ForegroundColor Red
-    Write-Host 'Next step: run the same command again. If it stops the same way, use the installer file instead: open https://lenscode.web.app/#download and download the installer for Windows.' -ForegroundColor Red
+    Write-Host 'Next step: run the same command again. If it stops the same way, use the installer file instead: open https://lenslet.web.app/#download and download the installer for Windows.' -ForegroundColor Red
     # Do not close the user's PowerShell window when run through "irm | iex".
     if ($MyInvocation.ScriptName) { exit 1 }
 }
