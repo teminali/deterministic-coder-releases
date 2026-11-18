@@ -2,9 +2,20 @@
 
 Installers for **lenslet** (formerly Lens Code and Deterministic Coder), the desktop app of the Lens coding agent: it edits the real files in your folder and you watch every change. You sign in with your Lens account; a free account gets an allowance of credits (a 5-hour window and a weekly window), and Lens Pro, Lens Max and Lens Ultra give you more. Website: https://lenslet.web.app. The `lens` terminal command has its own releases: https://github.com/teminali/lens-releases
 
-Current version: **v0.4.18 (beta, unsigned)**.
+Current version: **v0.4.19 (beta, unsigned)**, with Lens CLI 0.1.41.
 
-### What's new in v0.4.18
+### What's new in v0.4.19
+
+- **Copying a design from a picture is steadier.** Lens reads which words go where before it writes the page, then writes the whole page itself; a copy can no longer wait for ever on "Comparing with your pictures".
+- **The app follows what you asked.** A design can be recreated as something other than a web page (a Flutter app, for example); a turn that ends by asking you something waits for your answer; a photo you attach to go on a page is used as a picture.
+- **Lens has a phone.** It can start the pretend Android phone of the device pane, install and open the app it built, look at the screen and tap, swipe and type on it (emulators only).
+- **"Clone this site: <address>" starts the clone**, and a reply you stop part way is charged for what it wrote.
+
+Released before the mutation families were run on this build (they take about ten hours), so that it was ready the morning of 18 November 2026; the release notes list what was checked.
+
+Release notes: https://github.com/teminali/deterministic-coder-releases/releases/tag/v0.4.19
+
+### What was new in v0.4.18
 
 - **Auto works again when you are signed in.** In v0.4.17 every request on Auto from a signed-in account failed with "The platform model service is temporarily unavailable". This release fixes only that; everything else is v0.4.17. It was released without the full release gate, on the owner's decision; the release notes list what was checked.
 
@@ -141,7 +152,8 @@ Release notes: https://github.com/teminali/deterministic-coder-releases/releases
 
 | Version | State | What was verified | What was not |
 | --- | --- | --- | --- |
-| v0.4.18 | Published, Latest | v0.4.17 plus one fix (Auto through the key relay): a check of the gateway against a stand-in relay that failed on v0.4.17 and passes here, the gateway's own tests, the shipped gateway file read out of the built app and checked, the update from v0.4.17 through the public feed. | The full sweep of live scenarios, the mutation families and the packaged checks were not run again (owner's decision: the build differs from v0.4.17 only in the gateway file); the benchmark step. |
+| v0.4.19 | Published, Latest | Every required live scenario green on these exact bytes (88 scenarios, 5,634 checks; three that failed under load passed alone and are explained in the notes), 14 scenarios on the packaged app and 3 on its test-seam build, the unit and logic tests, the build. | The mutation families (not run on this build: about ten hours), the benchmark step (owner's waiver), the canary scenarios that need real models, paid services or the network (listed under Not proven). |
+| v0.4.18 | Superseded | v0.4.17 plus one fix (Auto through the key relay): a check of the gateway against a stand-in relay that failed on v0.4.17 and passes here, the gateway's own tests, the shipped gateway file read out of the built app and checked, the update from v0.4.17 through the public feed. | The full sweep of live scenarios, the mutation families and the packaged checks were not run again (owner's decision: the build differs from v0.4.17 only in the gateway file); the benchmark step. |
 | v0.4.17 | Superseded | Every step of the release gate but the benchmark step: all 88 required scenarios green on these exact bytes (5,617 checks), 14 scenarios on the packaged app and 3 on its test-seam build, twelve mutation families (362 planted defects, none surviving), the unit and logic tests and the build. | The benchmark step (owner's waiver: the Sonnet comparison in the notes is the evidence), the canary scenarios that need real models, paid services or the network (listed under Not proven in the notes), and the Windows, Linux and Intel Mac builds on real computers. |
 | v0.4.16 | Superseded | What the release notes list under Covered: 14 claims, among them voice on this computer, the 5-hour and weekly credit windows and payments. 13 of the 86 required scenarios were green on these exact bytes. | 21 required scenarios were red and 52 were stale; the full sweep, the mutation family and the packaged checks did not complete, and the release gate prints NOT RELEASE-READY. Published under a one-time owner waiver; the release notes list every claim that is not covered. |
 | v0.4.5 to v0.4.15 | Superseded | See each release's notes. | |
