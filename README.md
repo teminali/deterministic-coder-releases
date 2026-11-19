@@ -4,6 +4,8 @@ Installers for **lenslet** (formerly Lens Code and Deterministic Coder), the des
 
 Current version: **v0.4.21 (beta, unsigned)**, with Lens CLI 0.1.41.
 
+Beta: **v0.4.22**, with Lens CLI 0.1.42, a pre-release for people who turn on Settings > Preferences > "Get beta versions" (the download page and the updater on Stable stay on v0.4.21). Notes: https://github.com/teminali/deterministic-coder-releases/releases/tag/v0.4.22
+
 ### What's new in v0.4.21
 
 - **Building a phone app costs about half.** Lens's taps now land where it means them, it reads the screen's controls and fields by name, types into the right field, and opens an app in front of others. On a Flutter app with a backend: 30 steps instead of 58, the same 13 of 13 checks.
