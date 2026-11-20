@@ -2,11 +2,20 @@
 
 Installers for **lenslet** (formerly Lens Code and Deterministic Coder), the desktop app of the Lens coding agent: it edits the real files in your folder and you watch every change. You sign in with your Lens account; a free account gets an allowance of credits (a 5-hour window and a weekly window), and Lens Pro, Lens Max and Lens Ultra give you more. Website: https://lenslet.web.app. The `lens` terminal command has its own releases: https://github.com/teminali/lens-releases
 
-Current version: **v0.4.21 (beta, unsigned)**, with Lens CLI 0.1.41.
+Current version: **v0.4.23 (unsigned)**, with Lens CLI 0.1.43.
 
-Beta: **v0.4.22**, with Lens CLI 0.1.42, a pre-release for people who turn on Settings > Preferences > "Get beta versions" (the download page and the updater on Stable stay on v0.4.21). Notes: https://github.com/teminali/deterministic-coder-releases/releases/tag/v0.4.22
+### What's new in v0.4.23
 
-### What's new in v0.4.21
+- **Full-height phone pane with floating controls.** No top bar and no hint line under the phone, so it takes 98% of the pane's height; its buttons (Back, Home, Recents, settings, Stop on Android; Home, settings, Stop on iPhone) float in a column at its right edge.
+- **Run picks its target.** A target selector beside **▶ Run** lists Web preview, every Android phone, every iPhone simulator (on a Mac only) and **Manage phones…**. With a phone chosen, Run asks approval for the exact build, builds the Flutter, native Android or native iOS app, starts the phone, installs it and opens it (React Native and Expo say plainly that they need Metro).
+- **iPhone simulator (macOS only) and Manage phones.** Create a phone from a model and installed Android or iOS version (missing versions give download steps), switch the device frame on or off, toggle light or dark mode, or delete it. On a Mac, lenslet installs AXe (verified by checksum and Developer ID signature) with one button or automatically when starting a simulator; on Windows and Linux no iOS option appears anywhere.
+- **Reliable restarts, asset cropping, and v0.4.22 promoted to Stable.** Android emulators cold-boot and power off cleanly on Stop and quit so installed apps are never lost; Stable/Beta update channels (Settings > Preferences > "Get beta versions") and Lens CLI 0.1.43 (routing hand-driven simulator commands to lenslet's device tools) are included. The voice assistant button is hidden until proven on real speech while the dictation microphone stays.
+
+Released before the mutation families were run on this build (they take about ten hours); the release notes list everything verified, both Bench 5 phone runs, and the reruns.
+
+Release notes: https://github.com/teminali/deterministic-coder-releases/releases/tag/v0.4.23
+
+### What was new in v0.4.21
 
 - **Building a phone app costs about half.** Lens's taps now land where it means them, it reads the screen's controls and fields by name, types into the right field, and opens an app in front of others. On a Flutter app with a backend: 30 steps instead of 58, the same 13 of 13 checks.
 - **The Claude models are Sonnet 5.5, Opus 5.5 and Haiku 5.5**, in that order. Claude Fable is no longer offered.
@@ -159,7 +168,9 @@ Release notes: https://github.com/teminali/deterministic-coder-releases/releases
 
 | Version | State | What was verified | What was not |
 | --- | --- | --- | --- |
-| v0.4.21 | Published, Latest | Every required live scenario green on these exact bytes (88; two that failed once in the sweep passed alone, explained in the notes), 14 scenarios on the packaged app and 3 on its test-seam build, the update from v0.4.20, the unit and logic tests (one speed check that sits at its budget on the build Mac is disclosed), the build. A first build was not released: its sweep found a fault in the report fix, fixed and rerun in full. | The mutation families (not run on this build: about ten hours), the benchmark step (owner's waiver), Windows and Linux on real machines. |
+| v0.4.23 | Published, Latest | Every required live scenario green on these exact bytes (90/90, 5,801 checks; four reruns explained in the notes), 14/14 scenarios on the shipped macOS arm64 app (898/898) and 3/3 on its test-seam build (210/210), `packaged_ui_check.js` (including `voice_assistant_hidden`), `update_packaged.sh` from v0.4.21 (26/26), all 145 logic tests, lint/build checks, CI smoke on mac-arm64/mac-x64/win-x64/linux-x64, and two real-model Bench 5 phone runs (Android + iPhone simulator). | The mutation families (not run on this build: about ten hours), the automated multi-prompt benchmark ledger (waived by the owner), Windows and Linux on real machines. |
+| v0.4.22 | Superseded (beta) | Beta pre-release (CLI 0.1.42); superseded by v0.4.23 Stable. | See v0.4.22 release notes. |
+| v0.4.21 | Superseded | Every required live scenario green on these exact bytes (88; two that failed once in the sweep passed alone, explained in the notes), 14 scenarios on the packaged app and 3 on its test-seam build, the update from v0.4.20, the unit and logic tests (one speed check that sits at its budget on the build Mac is disclosed), the build. A first build was not released: its sweep found a fault in the report fix, fixed and rerun in full. | The mutation families (not run on this build: about ten hours), the benchmark step (owner's waiver), Windows and Linux on real machines. |
 | v0.4.20 | Superseded | Every required live scenario green on these exact bytes (88; seven that failed once in the sweep passed alone, explained in the notes), 14 scenarios on the packaged app and 3 on its test-seam build, the update from v0.4.19, the unit and logic tests, the build. | The mutation families (not run on this build: about ten hours), the benchmark step (owner's waiver), Windows and Linux on real machines. |
 | v0.4.19 | Superseded | Every required live scenario green on these exact bytes (88 scenarios, 5,634 checks; three that failed under load passed alone and are explained in the notes), 14 scenarios on the packaged app and 3 on its test-seam build, the unit and logic tests, the build. | The mutation families (not run on this build: about ten hours), the benchmark step (owner's waiver), the canary scenarios that need real models, paid services or the network (listed under Not proven). |
 | v0.4.18 | Superseded | v0.4.17 plus one fix (Auto through the key relay): a check of the gateway against a stand-in relay that failed on v0.4.17 and passes here, the gateway's own tests, the shipped gateway file read out of the built app and checked, the update from v0.4.17 through the public feed. | The full sweep of live scenarios, the mutation families and the packaged checks were not run again (owner's decision: the build differs from v0.4.17 only in the gateway file); the benchmark step. |
