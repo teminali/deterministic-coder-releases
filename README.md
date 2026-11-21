@@ -2,9 +2,19 @@
 
 Installers for **lenslet** (formerly Lens Code and Deterministic Coder), the desktop app of the Lens coding agent: it edits the real files in your folder and you watch every change. You sign in with your Lens account; a free account gets an allowance of credits (a 5-hour window and a weekly window), and Lens Pro, Lens Max and Lens Ultra give you more. Website: https://lenslet.web.app. The `lens` terminal command has its own releases: https://github.com/teminali/lens-releases
 
-Current version: **v0.4.23 (unsigned)**, with Lens CLI 0.1.43.
+Current version: **v0.4.24 (unsigned)**, with Lens CLI 0.1.43.
 
-### What's new in v0.4.23
+### What's new in v0.4.24
+
+- **Bulletproof artboard & mockup removal.** Copying a design from a screenshot now strips wide Dribbble/presentation artboards, soft Gaussian shadows (up to 128 px), smooth gradient backdrops, composite dark screens, multi-pane frames, and double-rim laptop/phone bezels from both the draft and delivered page while preserving real centered dialogs and full-bleed pages.
+- **Design-aware responsive system & full-viewport desktop fill.** Each copied design is read for its own spatial anatomy (sidebars as clean slide-out drawers with flex-flow interiors, top bars, multi-column card collapse, clamped display type, wrapping chips, grounded bottom docks, notched cards, and full-viewport `min-height: 100vh` desktop fill on wide monitors); follow-up rounds inspect rendered tablet/phone screenshots directly.
+- **Exact asset cutting & mismatch detection.** Two-step picture copies cut brand logos, marks, badges, and small circular portrait avatars (`< 32 px`) into `assets/` before writing HTML while preserving flex/grid flow; Round 1 visual checks also detect redrawn small-asset mismatches with board-offset crop coordinates.
+
+Released before the mutation families were run on this build (they take about ten hours); the release notes list everything verified (90/90 required live scenarios, 14/14 shipped + 3/3 seam packaged sweeps, 146/146 logic tests, `update_packaged.sh` v0.4.23 → v0.4.24, and 3 real-model regression legs).
+
+Release notes: https://github.com/teminali/deterministic-coder-releases/releases/tag/v0.4.24
+
+### What was new in v0.4.23
 
 - **Full-height phone pane with floating controls.** No top bar and no hint line under the phone, so it takes 98% of the pane's height; its buttons (Back, Home, Recents, settings, Stop on Android; Home, settings, Stop on iPhone) float in a column at its right edge.
 - **Run picks its target.** A target selector beside **▶ Run** lists Web preview, every Android phone, every iPhone simulator (on a Mac only) and **Manage phones…**. With a phone chosen, Run asks approval for the exact build, builds the Flutter, native Android or native iOS app, starts the phone, installs it and opens it (React Native and Expo say plainly that they need Metro).
