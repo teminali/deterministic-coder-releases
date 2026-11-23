@@ -2,9 +2,23 @@
 
 Installers for **lenslet** (formerly Lens Code and Deterministic Coder), the desktop app of the Lens coding agent: it edits the real files in your folder and you watch every change. You sign in with your Lens account; a free account gets an allowance of credits (a 5-hour window and a weekly window), and Lens Pro, Lens Max and Lens Ultra give you more. Website: https://lenslet.web.app. The `lens` terminal command has its own releases: https://github.com/teminali/lens-releases
 
-Current version: **v0.4.26 (unsigned)**, with Lens CLI 0.1.44.
+Current version: **v0.4.27 (unsigned)**, with Lens CLI 0.1.44.
 
-### What's new in v0.4.26
+### What's new in v0.4.27
+
+The stability release.
+
+- **A design on a blurred backdrop is copied without the backdrop.** A design shown on a blurred photo, a texture or a pattern is found by its own edges, and only the design inside is copied and measured. Before, the backdrop came along as torn shapes and the design was lost.
+- **An open search keeps up.** It asks again when the index changes, so a file written while it is open shows its functions without typing again.
+- **No "Try again" under "trying again will not help".**
+- **Auto on the platform's Gemini costs little.** When the platform's Claude cannot answer, Gemini 3.5 Flash Lite answers on the platform's keys (since v0.4.26), and the platform now charges a tenth of the list price on its free-tier Google keys (live for every version).
+- **The code audit.** Dead and legacy code removed from the app, its tests and the Lens CLI; the docs and the website match the platform as it is now.
+
+**Known on this build:** a downloaded update is installed only by "Restart to update" in the status bar.
+
+Release notes: https://github.com/teminali/deterministic-coder-releases/releases/tag/v0.4.27
+
+### What was new in v0.4.26
 
 A hotfix on v0.4.25.
 
@@ -201,7 +215,11 @@ Release notes: https://github.com/teminali/deterministic-coder-releases/releases
 
 | Version | State | What was verified | What was not |
 | --- | --- | --- | --- |
-| v0.4.23 | Published, Latest | Every required live scenario green on these exact bytes (90/90, 5,801 checks; four reruns explained in the notes), 14/14 scenarios on the shipped macOS arm64 app (898/898) and 3/3 on its test-seam build (210/210), `packaged_ui_check.js` (including `voice_assistant_hidden`), `update_packaged.sh` from v0.4.21 (26/26), all 145 logic tests, lint/build checks, CI smoke on mac-arm64/mac-x64/win-x64/linux-x64, and two real-model Bench 5 phone runs (Android + iPhone simulator). | The mutation families (not run on this build: about ten hours), the automated multi-prompt benchmark ledger (waived by the owner), Windows and Linux on real machines. |
+| v0.4.27 | Published, Latest | Every required live scenario green on these exact bytes (94/94; 14 memory-pressure reruns named in the notes), 14/14 scenarios on the shipped macOS arm64 app (872/872) and 3/3 on its test-seam build, all 175 logic tests, `update_packaged.sh` v0.4.26 → v0.4.27 26/26. Mutation families and the bench ledger not run. |
+| v0.4.26 | Superseded | A hotfix: the gateway tests on the tagged files, CI on all four platforms, the shipped app's UI check, `update_packaged.sh` v0.4.25 → v0.4.26 26/26, 13 of 14 scenarios on the shipped macOS arm64 app (the known open-search refresh). The full live sweep was not rerun. |
+| v0.4.25 | Superseded | Every required live scenario green on these exact bytes (94/94), 13 of 14 scenarios on the shipped macOS arm64 app and 3/3 on its test-seam build, all 174 logic tests, `update_packaged.sh` from v0.4.24 (26/26), three real-model legs. | The mutation families (about ten hours), the Claude Haiku benchmark ledger. Known: on the installed app a function in a file created while the app is open is not found by symbol within 8 seconds (found by text search at once). |
+| v0.4.24 | Superseded | Every required live scenario green on these exact bytes (90/90), 14/14 scenarios on the shipped macOS arm64 app and 3/3 on its test-seam build, all 146 logic tests, `update_packaged.sh` from v0.4.23, three real-model regression legs. | The mutation families (about ten hours). |
+| v0.4.23 | Superseded | Every required live scenario green on these exact bytes (90/90, 5,801 checks; four reruns explained in the notes), 14/14 scenarios on the shipped macOS arm64 app (898/898) and 3/3 on its test-seam build (210/210), `packaged_ui_check.js` (including `voice_assistant_hidden`), `update_packaged.sh` from v0.4.21 (26/26), all 145 logic tests, lint/build checks, CI smoke on mac-arm64/mac-x64/win-x64/linux-x64, and two real-model Bench 5 phone runs (Android + iPhone simulator). | The mutation families (not run on this build: about ten hours), the automated multi-prompt benchmark ledger (waived by the owner), Windows and Linux on real machines. |
 | v0.4.22 | Superseded (beta) | Beta pre-release (CLI 0.1.42); superseded by v0.4.23 Stable. | See v0.4.22 release notes. |
 | v0.4.21 | Superseded | Every required live scenario green on these exact bytes (88; two that failed once in the sweep passed alone, explained in the notes), 14 scenarios on the packaged app and 3 on its test-seam build, the update from v0.4.20, the unit and logic tests (one speed check that sits at its budget on the build Mac is disclosed), the build. A first build was not released: its sweep found a fault in the report fix, fixed and rerun in full. | The mutation families (not run on this build: about ten hours), the benchmark step (owner's waiver), Windows and Linux on real machines. |
 | v0.4.20 | Superseded | Every required live scenario green on these exact bytes (88; seven that failed once in the sweep passed alone, explained in the notes), 14 scenarios on the packaged app and 3 on its test-seam build, the update from v0.4.19, the unit and logic tests, the build. | The mutation families (not run on this build: about ten hours), the benchmark step (owner's waiver), Windows and Linux on real machines. |
