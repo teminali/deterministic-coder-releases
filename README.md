@@ -2,9 +2,21 @@
 
 Installers for **lenslet** (formerly Lens Code and Deterministic Coder), the desktop app of the Lens coding agent: it edits the real files in your folder and you watch every change. You sign in with your Lens account; a free account gets an allowance of credits (a 5-hour window and a weekly window), and Lens Pro, Lens Max and Lens Ultra give you more. Website: https://lenslet.web.app. The `lens` terminal command has its own releases: https://github.com/teminali/lens-releases
 
-Current version: **v0.4.24 (unsigned)**, with Lens CLI 0.1.43.
+Current version: **v0.4.25 (unsigned)**, with Lens CLI 0.1.44.
 
-### What's new in v0.4.24
+### What's new in v0.4.25
+
+- **A copy can be the project.** Asked for a copy of a page in an empty project, Lens writes it into the project folder itself (one copy, no sub-folder and no second copy). With files of your own in the project it names a sub-folder instead.
+- **The page check tells what Lens's edits caused.** After Lens edits a copied site, the check compares it with the copy as it was made, says which findings the edits caused, and sends those back to Lens to fix.
+- **Your own keys never use lenslet credits.** A turn answered on your own provider keys shows no credits note, and the meter stays at 0.
+- **Refusals said once, calmly.** A refused key is named on the failed turn's card with the provider, the reason and what to do; Auto moves to the next model with one calm notice per turn.
+- **The file tree keeps up while a tool works**, the usage under each answer counts that turn only, and deleting the open chat clears the screen.
+
+**Known on this build:** a function in a file created while the app is open is found by text search at once, but on the installed app not by symbol within 8 seconds (a regression from v0.4.24; the fix comes in the next version). Released before the mutation families were run (about ten hours) and without the Claude Haiku benchmark ledger; the release notes list everything verified (94/94 required live scenarios, 13/14 shipped + 3/3 seam packaged sweeps, 174/174 logic tests, `update_packaged.sh` v0.4.24 → v0.4.25 26/26, three real-model legs).
+
+Release notes: https://github.com/teminali/deterministic-coder-releases/releases/tag/v0.4.25
+
+### What was new in v0.4.24
 
 - **Bulletproof artboard & mockup removal.** Copying a design from a screenshot now strips wide Dribbble/presentation artboards, soft Gaussian shadows (up to 128 px), smooth gradient backdrops, composite dark screens, multi-pane frames, and double-rim laptop/phone bezels from both the draft and delivered page while preserving real centered dialogs and full-bleed pages.
 - **Design-aware responsive system & full-viewport desktop fill.** Each copied design is read for its own spatial anatomy (sidebars as clean slide-out drawers with flex-flow interiors, top bars, multi-column card collapse, clamped display type, wrapping chips, grounded bottom docks, notched cards, and full-viewport `min-height: 100vh` desktop fill on wide monitors); follow-up rounds inspect rendered tablet/phone screenshots directly.
