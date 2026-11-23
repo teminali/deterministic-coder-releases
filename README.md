@@ -2,9 +2,20 @@
 
 Installers for **lenslet** (formerly Lens Code and Deterministic Coder), the desktop app of the Lens coding agent: it edits the real files in your folder and you watch every change. You sign in with your Lens account; a free account gets an allowance of credits (a 5-hour window and a weekly window), and Lens Pro, Lens Max and Lens Ultra give you more. Website: https://lenslet.web.app. The `lens` terminal command has its own releases: https://github.com/teminali/lens-releases
 
-Current version: **v0.4.25 (unsigned)**, with Lens CLI 0.1.44.
+Current version: **v0.4.26 (unsigned)**, with Lens CLI 0.1.44.
 
-### What's new in v0.4.25
+### What's new in v0.4.26
+
+A hotfix on v0.4.25.
+
+- **Auto keeps answering when the platform's Claude cannot.** Signed in on Auto, a turn whose Claude Haiku is refused on the platform's key (no credit, a refused key) is answered by Gemini 3.5 Flash Lite on the platform's Gemini keys, and the chat says so once. Before, every such turn failed with "Anthropic refused the platform's key". A turn on your own keys moves only to your own keys, so it never spends lenslet credits unasked.
+- **The platform's Gemini keys share the load.** Requests go to the platform's keys in turn, and a key that is rate limited or refused rests while the others carry on. This runs on the platform and helps every version of the app.
+
+**Known on this build:** an open search does not refresh when the index catches up (about 0.1 s after a file is written): a search typed in that moment, or left open while Lens writes files, keeps its old answer until you type again. The fix comes in v0.4.27. Verified: the gateway tests on the tagged files, CI on all four platforms, the installed app's UI check and the update from v0.4.25; the full live sweep was not rerun for this hotfix (the release notes list everything).
+
+Release notes: https://github.com/teminali/deterministic-coder-releases/releases/tag/v0.4.26
+
+### What was new in v0.4.25
 
 - **A copy can be the project.** Asked for a copy of a page in an empty project, Lens writes it into the project folder itself (one copy, no sub-folder and no second copy). With files of your own in the project it names a sub-folder instead.
 - **The page check tells what Lens's edits caused.** After Lens edits a copied site, the check compares it with the copy as it was made, says which findings the edits caused, and sends those back to Lens to fix.
