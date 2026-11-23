@@ -2,9 +2,21 @@
 
 Installers for **lenslet** (formerly Lens Code and Deterministic Coder), the desktop app of the Lens coding agent: it edits the real files in your folder and you watch every change. You sign in with your Lens account; a free account gets an allowance of credits (a 5-hour window and a weekly window), and Lens Pro, Lens Max and Lens Ultra give you more. Website: https://lenslet.web.app. The `lens` terminal command has its own releases: https://github.com/teminali/lens-releases
 
-Current version: **v0.4.27 (unsigned)**, with Lens CLI 0.1.44.
+Current version: **v0.4.28 (unsigned)**, with Lens CLI 0.1.45.
 
-### What's new in v0.4.27
+### What's new in v0.4.28
+
+- **No more double sends when Claude has no credit.** Auto no longer sends each request to a provider that refused for its credit before the next model gets it, and every app hears it from the platform, also right after a restart.
+- **When Google is overloaded, the chat says so and Lens waits it out** (15, 30, then 60 seconds between tries), instead of "the stream failed".
+- **A small request in a long chat is light.** Old screenshots are no longer sent with every request.
+- **Steps Lens moved on from are shown calmly**, folded into one row with a count; a failure that ended the turn is still red.
+- With Lens CLI 0.1.45: a turn that wrote files says what it did, and picture work uses lenslet's picture tool instead of installing Python libraries.
+
+**Known on this build:** with Claude out of credit, Auto depends on Gemini's free capacity, which runs out at busy hours ("Google is overloaded right now"). Picture copies on Gemini Flash Lite are weaker than on Claude.
+
+Release notes: https://github.com/teminali/deterministic-coder-releases/releases/tag/v0.4.28
+
+### What was new in v0.4.27
 
 The stability release.
 
@@ -215,7 +227,8 @@ Release notes: https://github.com/teminali/deterministic-coder-releases/releases
 
 | Version | State | What was verified | What was not |
 | --- | --- | --- | --- |
-| v0.4.27 | Published, Latest | Every required live scenario green on these exact bytes (94/94; 14 memory-pressure reruns named in the notes), 14/14 scenarios on the shipped macOS arm64 app (872/872) and 3/3 on its test-seam build, all 175 logic tests, `update_packaged.sh` v0.4.26 → v0.4.27 26/26. Mutation families and the bench ledger not run. |
+| v0.4.28 | Published, Latest | Every required live scenario green on these exact bytes (94/94; 7 load reruns named in the notes), 14/14 scenarios on the shipped macOS arm64 app (872/872) and 3/3 on its test-seam build, all 177 logic tests, `update_packaged.sh` v0.4.27 → v0.4.28 26/26. Gemini legs: about 80% of Claude Code Sonnet on a bug fix, 70% on a link copy, 60% on a question; the dashboard picture was not measurable (Google 503). Mutation families and the bench ledger not run. |
+| v0.4.27 | Superseded | Every required live scenario green on these exact bytes (94/94; 14 memory-pressure reruns named in the notes), 14/14 scenarios on the shipped macOS arm64 app (872/872) and 3/3 on its test-seam build, all 175 logic tests, `update_packaged.sh` v0.4.26 → v0.4.27 26/26. Mutation families and the bench ledger not run. |
 | v0.4.26 | Superseded | A hotfix: the gateway tests on the tagged files, CI on all four platforms, the shipped app's UI check, `update_packaged.sh` v0.4.25 → v0.4.26 26/26, 13 of 14 scenarios on the shipped macOS arm64 app (the known open-search refresh). The full live sweep was not rerun. |
 | v0.4.25 | Superseded | Every required live scenario green on these exact bytes (94/94), 13 of 14 scenarios on the shipped macOS arm64 app and 3/3 on its test-seam build, all 174 logic tests, `update_packaged.sh` from v0.4.24 (26/26), three real-model legs. | The mutation families (about ten hours), the Claude Haiku benchmark ledger. Known: on the installed app a function in a file created while the app is open is not found by symbol within 8 seconds (found by text search at once). |
 | v0.4.24 | Superseded | Every required live scenario green on these exact bytes (90/90), 14/14 scenarios on the shipped macOS arm64 app and 3/3 on its test-seam build, all 146 logic tests, `update_packaged.sh` from v0.4.23, three real-model regression legs. | The mutation families (about ten hours). |
